@@ -15,12 +15,12 @@ namespace LocalJournal.Services
 			items = new List<Item>();
 			var mockItems = new List<Item>
 			{
-				new Item { Id = Guid.NewGuid().ToString(), Text = "First item", Description="This is an item description." },
-				new Item { Id = Guid.NewGuid().ToString(), Text = "Second item", Description="This is an item description." },
-				new Item { Id = Guid.NewGuid().ToString(), Text = "Third item", Description="This is an item description." },
-				new Item { Id = Guid.NewGuid().ToString(), Text = "Fourth item", Description="This is an item description." },
-				new Item { Id = Guid.NewGuid().ToString(), Text = "Fifth item", Description="This is an item description." },
-				new Item { Id = Guid.NewGuid().ToString(), Text = "Sixth item", Description="This is an item description." }
+				new Item { Id = Guid.NewGuid().ToString(), Title = "First item ", Body="This is body of a text entry." },
+				new Item { Id = Guid.NewGuid().ToString(), Title = "Second item", Body="This is body of a text entry." },
+				new Item { Id = Guid.NewGuid().ToString(), Title = "Third item ", Body="This is body of a text entry." },
+				new Item { Id = Guid.NewGuid().ToString(), Title = "Fourth item", Body="This is body of a text entry." },
+				new Item { Id = Guid.NewGuid().ToString(), Title = "Fifth item ", Body="This is body of a text entry." },
+				new Item { Id = Guid.NewGuid().ToString(), Title = "Sixth item ", Body="This is body of a text entry." }
 			};
 
 			foreach (var item in mockItems)

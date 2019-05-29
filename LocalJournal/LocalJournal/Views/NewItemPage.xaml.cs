@@ -21,8 +21,8 @@ namespace LocalJournal.Views
 
 			Item = new Item
 			{
-				Text = "Item name",
-				Description = "This is an item description."
+				Title = "Item name",
+				Body = "This is an item description."
 			};
 
 			BindingContext = this;

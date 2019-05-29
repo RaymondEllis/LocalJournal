@@ -36,12 +36,12 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Padding="10">
-                            <Label Text="{Binding Text}" 
+                            <Label Text="{Binding Title}" 
                                 d:Text="{Binding .}"
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
                                 FontSize="16" />
-                            <Label Text="{Binding Description}" 
+                            <Label Text="{Binding Body}" 
                                 d:Text="Item description"
                                 LineBreakMode="NoWrap"
                                 Style="{DynamicResource ListItemDetailTextStyle}"
