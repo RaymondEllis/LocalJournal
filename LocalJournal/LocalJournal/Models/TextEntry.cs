@@ -2,7 +2,7 @@
 
 namespace LocalJournal.Models
 {
-	public class Item
+	public class TextEntry : IEntry
 	{
 		public string Id { get; set; }
 		public string Title { get; set; }

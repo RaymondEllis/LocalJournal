@@ -4,32 +4,32 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="LocalJournal.Views.ItemsPage"
+             x:Class="LocalJournal.Views.EntriesPage"
              Title="{Binding Title}"
-             x:Name="BrowseItemsPage">
+             x:Name="BrowseEntriesPage">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Clicked="AddItem_Clicked" />
+        <ToolbarItem Text="Add" Clicked="AddEntry_Clicked" />
     </ContentPage.ToolbarItems>
 
     <StackLayout>
-        <ListView x:Name="ItemsListView"
-                ItemsSource="{Binding Items}"
+        <ListView x:Name="EntriesListView"
+                ItemsSource="{Binding Entries}"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
-                RefreshCommand="{Binding LoadItemsCommand}"
+                RefreshCommand="{Binding LoadEntriesCommand}"
                 IsPullToRefreshEnabled="true"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                 CachingStrategy="RecycleElement"
-                ItemSelected="OnItemSelected">
+                ItemSelected="OnEntrieSelected">
             <d:ListView.ItemsSource>
                 <x:Array Type="{x:Type x:String}">
-                    <x:String>First Item</x:String>
-                    <x:String>Second Item</x:String>
-                    <x:String>Third Item</x:String>
-                    <x:String>Forth Item</x:String>
-                    <x:String>Fifth Item</x:String>
-                    <x:String>Sixth Item</x:String>
+                    <x:String>First Entry</x:String>
+                    <x:String>Second Entry</x:String>
+                    <x:String>Third Entry</x:String>
+                    <x:String>Forth Entry</x:String>
+                    <x:String>Fifth Entry</x:String>
+                    <x:String>Sixth Entry</x:String>
                 </x:Array>
             </d:ListView.ItemsSource>
             <ListView.ItemTemplate>
@@ -39,13 +39,9 @@
                             <Label Text="{Binding Title}" 
                                 d:Text="{Binding .}"
                                 LineBreakMode="NoWrap" 
-                                Style="{DynamicResource ListItemTextStyle}" 
+                                Style="{DynamicResource ListEntryTextStyle}" 
                                 FontSize="16" />
-                            <Label Text="{Binding Body}" 
-                                d:Text="Item description"
-                                LineBreakMode="NoWrap"
-                                Style="{DynamicResource ListItemDetailTextStyle}"
-                                FontSize="13" />
+                            
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

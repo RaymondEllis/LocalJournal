@@ -6,61 +6,61 @@ using LocalJournal.Models;
 
 namespace LocalJournal.Services
 {
-	public class MockDataStore : IDataStore<Item>
+	public class MockDataStore : IDataStore<TextEntry>
 	{
-		List<Item> items;
-
+		readonly List<TextEntry> entries;
+		
 		public MockDataStore()
 		{
-			items = new List<Item>();
-			var mockItems = new List<Item>
+			entries = new List<TextEntry>();
+			var mockEntries = new List<TextEntry>
 			{
-				new Item { Id = Guid.NewGuid().ToString(), Title = "First item ", Body="This is body of a text entry." },
-				new Item { Id = Guid.NewGuid().ToString(), Title = "Second item", Body="This is body of a text entry." },
-				new Item { Id = Guid.NewGuid().ToString(), Title = "Third item ", Body="This is body of a text entry." },
-				new Item { Id = Guid.NewGuid().ToString(), Title = "Fourth item", Body="This is body of a text entry." },
-				new Item { Id = Guid.NewGuid().ToString(), Title = "Fifth item ", Body="This is body of a text entry." },
-				new Item { Id = Guid.NewGuid().ToString(), Title = "Sixth item ", Body="This is body of a text entry." }
+				new TextEntry { Id = Guid.NewGuid().ToString(), Title = "[mock] First entry ", Body="This is body of a text entry." },
+				new TextEntry { Id = Guid.NewGuid().ToString(), Title = "[mock] Second entry", Body="This is body of a text entry." },
+				new TextEntry { Id = Guid.NewGuid().ToString(), Title = "[mock] Third entry ", Body="This is body of a text entry." },
+				new TextEntry { Id = Guid.NewGuid().ToString(), Title = "[mock] Fourth entry", Body="This is body of a text entry." },
+				new TextEntry { Id = Guid.NewGuid().ToString(), Title = "[mock] Fifth entry ", Body="This is body of a text entry." },
+				new TextEntry { Id = Guid.NewGuid().ToString(), Title = "[mock] Sixth entry ", Body="This is body of a text entry." }
 			};
 
-			foreach (var item in mockItems)
+			foreach (var entry in mockEntries)
 			{
-				items.Add(item);
+				entries.Add(entry);
 			}
 		}
 
-		public async Task<bool> AddItemAsync(Item item)
+		public async Task<bool> AddEntryAsync(TextEntry entry)
 		{
-			items.Add(item);
+			entries.Add(entry);
 
 			return await Task.FromResult(true);
 		}
 
-		public async Task<bool> UpdateItemAsync(Item item)
+		public async Task<bool> UpdateEntryAsync(TextEntry entry)
 		{
-			var oldItem = items.Where((Item arg) => arg.Id == item.Id).FirstOrDefault();
-			items.Remove(oldItem);
-			items.Add(item);
+			var oldEntry = entries.Where((TextEntry arg) => arg.Id == entry.Id).FirstOrDefault();
+			entries.Remove(oldEntry);
+			entries.Add(entry);
 
 			return await Task.FromResult(true);
 		}
 
-		public async Task<bool> DeleteItemAsync(string id)
+		public async Task<bool> DeleteEntryAsync(string id)
 		{
-			var oldItem = items.Where((Item arg) => arg.Id == id).FirstOrDefault();
-			items.Remove(oldItem);
+			var oldEntry = entries.Where((TextEntry arg) => arg.Id == id).FirstOrDefault();
+			entries.Remove(oldEntry);
 
 			return await Task.FromResult(true);
 		}
 
-		public async Task<Item> GetItemAsync(string id)
+		public async Task<TextEntry> GetEntryAsync(string id)
 		{
-			return await Task.FromResult(items.FirstOrDefault(s => s.Id == id));
+			return await Task.FromResult(entries.FirstOrDefault(entry => entry.Id == id));
 		}
 
-		public async Task<IEnumerable<Item>> GetItemsAsync(bool forceRefresh = false)
+		public async Task<IEnumerable<TextEntry>> GetEntriesAsync(bool forceRefresh = false)
 		{
-			return await Task.FromResult(items);
+			return await Task.FromResult(entries);
 		}
 	}
 }

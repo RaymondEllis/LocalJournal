@@ -11,28 +11,28 @@ namespace LocalJournal.Views
 	// Learn more about making custom code visible in the Xamarin.Forms previewer
 	// by visiting https://aka.ms/xamarinforms-previewer
 	[DesignTimeVisible(false)]
-	public partial class ItemDetailPage : ContentPage
+	public partial class EntryDetailPage : ContentPage
 	{
-		ItemDetailViewModel viewModel;
+		readonly EntryDetailViewModel viewModel;
 
-		public ItemDetailPage(ItemDetailViewModel viewModel)
+		public EntryDetailPage(EntryDetailViewModel viewModel)
 		{
 			InitializeComponent();
 
 			BindingContext = this.viewModel = viewModel;
 		}
 
-		public ItemDetailPage()
+		public EntryDetailPage()
 		{
 			InitializeComponent();
 
-			var item = new Item
+			var entry = new TextEntry
 			{
-				Title = "Item 1",
-				Body = "This is an item description."
+				Title = "",
+				Body = ""
 			};
 
-			viewModel = new ItemDetailViewModel(item);
+			viewModel = new EntryDetailViewModel(entry);
 			BindingContext = viewModel;
 		}
 	}

@@ -4,8 +4,8 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="LocalJournal.Views.NewItemPage"
-             Title="New Item">
+             x:Class="LocalJournal.Views.NewEntryPage"
+             Title="New Entry">
     
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Cancel" Clicked="Cancel_Clicked" />
@@ -14,10 +14,10 @@
     
     <ContentPage.Content>
         <StackLayout Spacing="20" Padding="15">
-            <Label Text="Text" FontSize="Medium" />
-            <Entry Text="{Binding Item.Title}" d:Text="Item title" FontSize="Small" />
-            <Label Text="Description" FontSize="Medium" />
-            <Editor Text="{Binding Item.Body}" d:Text="Item body" FontSize="Small" Margin="0" />
+            <Label Text="Title" FontSize="Medium" />
+            <Entry Text="{Binding Entry.Title}" d:Text="Title" FontSize="Small" />
+            <Label Text="Body" FontSize="Medium" />
+            <Editor Text="{Binding Entry.Body}" d:Text="Entry body" FontSize="Small" Margin="0" />
         </StackLayout>
     </ContentPage.Content>
     
