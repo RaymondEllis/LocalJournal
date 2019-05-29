@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="f7251e7f-5522-4b13-81b0-01f36839fbe1"
+    Name="TallyGames.LocalJournal"
     Publisher="CN=e76fd273-1531-438f-8685-855d922cee91"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>LocalJournal.UWP</DisplayName>
-    <PublisherDisplayName>e76fd273-1531-438f-8685-855d922cee91</PublisherDisplayName>
+    <DisplayName>LocalJournal</DisplayName>
+    <PublisherDisplayName>Tally Games</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,10 +32,10 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="LocalJournal.UWP.App">
       <uap:VisualElements
-        DisplayName="LocalJournal.UWP"
+        DisplayName="Local Journal"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="LocalJournal.UWP"
+        Description="A simple locally stored journal app."
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
           <uap:ShowNameOnTiles>
@@ -48,8 +48,4 @@
       </uap:VisualElements>
     </Application>
   </Applications>
-
-  <Capabilities>
-    <Capability Name="internetClient" />
-  </Capabilities>
 </Package>
