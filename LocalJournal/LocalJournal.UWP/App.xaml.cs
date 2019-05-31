@@ -56,7 +56,7 @@ namespace LocalJournal.UWP
 				Xamarin.Forms.Forms.Init(e);
 
 
-				Xamarin.Forms.DependencyService.Register<FileDataStore>();
+				Xamarin.Forms.DependencyService.Register<UWPFileDataStore>();
 
 
 				if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
