@@ -22,6 +22,8 @@ namespace LocalJournal.Views
 			Entry = new TextEntry
 			{
 				Id = "single",
+				Title="New Entry",
+				Body="Entry body",
 				// ToDo: Set creation date
 			};
 

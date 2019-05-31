@@ -13,7 +13,6 @@ namespace LocalJournal
 		{
 			InitializeComponent();
 
-			DependencyService.Register<FileDataStore>();
 			DependencyService.Register<RawSerializer>();
 			MainPage = new MainPage();
 		}
