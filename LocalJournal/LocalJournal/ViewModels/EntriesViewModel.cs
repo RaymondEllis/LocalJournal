@@ -23,8 +23,8 @@ namespace LocalJournal.ViewModels
 
 			MessagingCenter.Subscribe<NewEntryPage, TextEntry>(this, "AddEntry", async (obj, entry) =>
 			{
-				Entries.Add(entry);
-				await DataStore.AddEntryAsync(entry);
+				if (await DataStore.AddEntryAsync(entry))
+					Entries.Add(entry);
 			});
 		}
 
