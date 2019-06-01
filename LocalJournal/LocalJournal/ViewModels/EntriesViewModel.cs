@@ -26,6 +26,12 @@ namespace LocalJournal.ViewModels
 				if (await DataStore.AddEntryAsync(entry))
 					Entries.Add(entry);
 			});
+
+			MessagingCenter.Subscribe<EntryEditPage, TextEntry>(this, "UpdateEntry", async (obj, entry) =>
+			 {
+				 if (await DataStore.UpdateEntryAsync(entry))
+					 Entries[Entries.IndexOf(entry)] = entry; // Refresh list
+			 });
 		}
 
 		async Task ExecuteLoadEntriesCommand()

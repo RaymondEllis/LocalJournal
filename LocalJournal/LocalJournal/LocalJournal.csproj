@@ -23,6 +23,9 @@
     <Compile Update="Views\EntryDetailPage.xaml.cs">
       <DependentUpon>EntryDetailPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\EntryEditPage.xaml.cs">
+      <DependentUpon>EntryEditPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\NewEntryPage.xaml.cs">
       <DependentUpon>NewEntryPage.xaml</DependentUpon>
     </Compile>

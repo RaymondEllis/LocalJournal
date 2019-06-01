@@ -33,7 +33,7 @@ namespace LocalJournal.Views
 			if (entry == null)
 				return;
 
-			await Navigation.PushAsync(new EntryDetailPage(new EntryDetailViewModel(entry)));
+			await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
 
 			// Manually deselect entry.
 			EntriesListView.SelectedItem = null;
