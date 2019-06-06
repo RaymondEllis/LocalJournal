@@ -5,6 +5,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using LocalJournal.Models;
+using NodaTime;
+using NodaTime.Extensions;
 
 namespace LocalJournal.Views
 {
@@ -19,12 +21,18 @@ namespace LocalJournal.Views
 		{
 			InitializeComponent();
 
+
+			var now = SystemClock.Instance.InTzdbSystemDefaultZone().GetCurrentOffsetDateTime();
+
 			Entry = new TextEntry
 			{
-				Id = "single",
-				Title="New Entry",
-				Body="Entry body",
-				// ToDo: Set creation date
+				Id = now.ToString("uuuu'-'MM'-'dd' T'HH''mm''o<G>", null),
+
+				CreationTime = now,
+				LastModified = now,
+
+				Title = "New Entry",
+				Body = "Entry body",
 			};
 
 			BindingContext = this;
