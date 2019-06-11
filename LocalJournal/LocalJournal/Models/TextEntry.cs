@@ -3,7 +3,7 @@ using System;
 
 namespace LocalJournal.Models
 {
-	public class TextEntry : IEntry
+	public class TextEntry
 	{
 		public string Id { get; set; }
 

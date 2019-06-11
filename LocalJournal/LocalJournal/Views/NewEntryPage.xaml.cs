@@ -31,8 +31,8 @@ namespace LocalJournal.Views
 				CreationTime = now,
 				LastModified = now,
 
-				Title = "New Entry",
-				Body = "Entry body",
+				Title = "",
+				Body = "",
 			};
 
 			BindingContext = this;

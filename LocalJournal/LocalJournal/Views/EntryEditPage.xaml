@@ -6,19 +6,20 @@
              mc:Ignorable="d"
              x:Class="LocalJournal.Views.EntryEditPage"
              Title="Edit Entry">
-    
+
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Cancel" Clicked="Cancel_Clicked" />
+        <ToolbarItem Text="Cancel" Clicked="Cancel_Clicked" Priority="0" />
         <ToolbarItem Text="Save" Clicked="Save_Clicked" />
     </ContentPage.ToolbarItems>
-    
+
     <ContentPage.Content>
-        <StackLayout Spacing="20" Padding="15">
-            <Label Text="Title" FontSize="Medium" />
-            <Entry Text="{Binding Entry.Title}" d:Text="Title" FontSize="Small" />
-            <Label Text="Body" FontSize="Medium" />
-            <Editor Text="{Binding Entry.Body}" d:Text="Entry body" FontSize="Small" Margin="0" />
-        </StackLayout>
+        <ScrollView>
+            <StackLayout Spacing="20" Padding="15">
+                <Entry Text="{Binding Entry.Title}" Placeholder="Title" d:Text="Title" FontSize="Small" />
+                <Editor Text="{Binding Entry.Body}" Placeholder="Body" d:Text="Entry body" FontSize="Small" Margin="0"
+                        Keyboard="Chat" AutoSize="TextChanges"/>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
-    
+
 </ContentPage>
