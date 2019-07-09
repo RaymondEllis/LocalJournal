@@ -13,7 +13,8 @@ namespace LocalJournal
 		{
 			InitializeComponent();
 
-			DependencyService.Register<RawSerializer>();
+			//DependencyService.Register<RawSerializer>();
+			DependencyService.Register<YamlFrontSerializer>();
 			MainPage = new MainPage();
 		}
 
