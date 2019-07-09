@@ -26,7 +26,7 @@ namespace LocalJournal.Views
 
 			Entry = new TextEntry
 			{
-				Id = now.ToString("uuuu'-'MM'-'dd' T'HH''mm''o<G>", null),
+				Id = now.ToUserString(),
 
 				CreationTime = now,
 				LastModified = now,

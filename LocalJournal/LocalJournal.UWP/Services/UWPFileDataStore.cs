@@ -39,6 +39,8 @@ namespace LocalJournal.Services
 			if (!await CheckPermission())
 				return false;
 
+			entry.LastModified = MyDate.Now();
+
 			using (var stream = await folder.OpenStreamForWriteAsync(FileFromId(entry.Id), CreationCollisionOption.ReplaceExisting))
 			{
 				using (var sw = new StreamWriter(stream))

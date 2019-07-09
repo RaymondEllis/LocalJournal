@@ -35,6 +35,8 @@ namespace LocalJournal.Services
 			if (!CheckPermission())
 				return false;
 
+			entry.LastModified = MyDate.Now();
+
 			using (var sw = new StreamWriter(FileFromId(entry.Id)))
 				return await dataSerializer.WriteAsync(sw, entry);
 		}
