@@ -22,7 +22,7 @@ namespace LocalJournal.Views
 			InitializeComponent();
 
 
-			var now = SystemClock.Instance.InTzdbSystemDefaultZone().GetCurrentOffsetDateTime();
+			var now = MyDate.Now();
 
 			Entry = new TextEntry
 			{

@@ -17,7 +17,7 @@
             <StackLayout Spacing="20" Padding="15">
                 <Entry Text="{Binding Entry.Title}" Placeholder="Title" d:Text="Title" FontSize="Small" />
                 <Editor Text="{Binding Entry.Body}" Placeholder="Body" d:Text="Entry body" FontSize="Small" Margin="0"
-                        Keyboard="Chat" AutoSize="TextChanges"/>
+                        Keyboard="Chat" AutoSize="TextChanges" HeightRequest="500"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
