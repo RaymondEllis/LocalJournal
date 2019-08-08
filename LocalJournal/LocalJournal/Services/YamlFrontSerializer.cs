@@ -10,6 +10,7 @@ using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Helpers;
 using NodaTime.Text;
 using NodaTime;
+using Xamarin.Forms;
 
 namespace LocalJournal.Services
 {
@@ -20,8 +21,10 @@ namespace LocalJournal.Services
 		private readonly YamlNodaTimeConverter<OffsetDateTime> NodaTimeConverter =
 			new YamlNodaTimeConverter<OffsetDateTime>(OffsetDateTimePattern.CreateWithInvariantCulture("G"));
 
-		public async Task<TextEntry> ReadAsync(StreamReader sr, string id)
+		public async Task<TextEntry> ReadAsync(StreamReader sr, string id, bool ignoreBody)
 		{
+			var crypto = DependencyService.Get<ICrypto>();
+
 			string tmp = sr.ReadLine();
 			// Yaml
 			if (tmp == Identifier)
@@ -44,7 +47,14 @@ namespace LocalJournal.Services
 
 				var entry = deserializer.Deserialize<TextEntry>(yamlSB.ToString());
 
-				entry.Body = await sr.ReadToEndAsync();
+				entry.Body = ignoreBody ? "" : await sr.ReadToEndAsync();
+
+				if (entry.Encrypted && !ignoreBody)
+				{
+					await crypto.Unlock();
+					entry.Body = await crypto.Decrypt(entry.Body);
+				}
+
 				return entry;
 			}
 			// No Yaml
@@ -54,8 +64,14 @@ namespace LocalJournal.Services
 				{
 					Id = id,
 					Title = "Title not supported, " + id,
-					Body = tmp + await sr.ReadToEndAsync(),
+					Body = ignoreBody ? "" : tmp + await sr.ReadToEndAsync(),
 				};
+
+				if (entry.Encrypted && !ignoreBody)
+				{
+					await crypto.Unlock();
+					entry.Body = await crypto.Decrypt(entry.Body);
+				}
 
 				return entry;
 			}
@@ -63,6 +79,13 @@ namespace LocalJournal.Services
 
 		public async Task<bool> WriteAsync(StreamWriter sw, TextEntry entry)
 		{
+			var crypto = DependencyService.Get<ICrypto>();
+			if (entry.Encrypted)
+			{
+				if (!await crypto.Unlock())
+					return false;
+			}
+
 			var serializer = new SerializerBuilder()
 				.WithNamingConvention(new CamelCaseNamingConvention())
 				.WithTypeConverter(NodaTimeConverter)
@@ -73,7 +96,12 @@ namespace LocalJournal.Services
 			await sw.WriteAsync(serializer.Serialize(entry));
 			//serializer.Serialize(sw, entry);
 			await sw.WriteLineAsync(Identifier);
-			await sw.WriteAsync(entry.Body);
+
+			if (entry.Encrypted)
+				await sw.WriteAsync(await crypto.Encrypt(entry.Body));
+			else
+				await sw.WriteAsync(entry.Body);
+
 			return true;
 		}
 	}

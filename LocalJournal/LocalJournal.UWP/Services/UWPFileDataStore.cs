@@ -59,18 +59,18 @@ namespace LocalJournal.Services
 			return true;
 		}
 
-		public async Task<TextEntry> GetEntryAsync(string id)
+		public async Task<TextEntry> GetEntryAsync(string id, bool ignoreBody = false)
 		{
 			if (!await CheckPermission())
 				return null;
 
 			using (var stream = await folder.OpenStreamForReadAsync(FileFromId(id)))
-				return await GetEntryAsync(id, stream);
+				return await GetEntryAsync(id, stream, ignoreBody);
 		}
-		private async Task<TextEntry> GetEntryAsync(string id, Stream stream)
+		private async Task<TextEntry> GetEntryAsync(string id, Stream stream, bool ignoreBody)
 		{
 			using (var sr = new StreamReader(stream))
-				return await dataSerializer.ReadAsync(sr, id);
+				return await dataSerializer.ReadAsync(sr, id, ignoreBody);
 		}
 
 		public async Task<IEnumerable<TextEntry>> GetEntriesAsync(bool forceRefresh = false)
@@ -86,7 +86,7 @@ namespace LocalJournal.Services
 				{
 					TextEntry entry;
 					using (var stream = await file.OpenStreamForReadAsync())
-						entry = await GetEntryAsync(Path.GetFileNameWithoutExtension(file.Name), stream);
+						entry = await GetEntryAsync(Path.GetFileNameWithoutExtension(file.Name), stream, true);
 					if (entry != null)
 						entries.Add(entry);
 				}

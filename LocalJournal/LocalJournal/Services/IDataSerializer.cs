@@ -5,7 +5,7 @@ namespace LocalJournal.Services
 {
 	public interface IDataSerializer<T>
 	{
-		Task<T> ReadAsync(StreamReader sr, string id);
+		Task<T> ReadAsync(StreamReader sr, string id, bool ignoreBody = false);
 
 		Task<bool> WriteAsync(StreamWriter sw, T t);
 	}

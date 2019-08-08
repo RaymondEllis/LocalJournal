@@ -51,13 +51,13 @@ namespace LocalJournal.Services
 			return await Task.FromResult(true);
 		}
 
-		public async Task<TextEntry> GetEntryAsync(string id)
+		public async Task<TextEntry> GetEntryAsync(string id, bool ignoreBody = false)
 		{
 			if (!CheckPermission())
 				return null;
 
 			using (var sr = new StreamReader(FileFromId(id)))
-				return await dataSerializer.ReadAsync(sr, id);
+				return await dataSerializer.ReadAsync(sr, id, ignoreBody);
 		}
 
 		public async Task<IEnumerable<TextEntry>> GetEntriesAsync(bool forceRefresh = false)
@@ -69,7 +69,7 @@ namespace LocalJournal.Services
 			var entries = new List<TextEntry>(files.Length);
 			foreach (var file in files)
 			{
-				var entry = await GetEntryAsync(Path.GetFileNameWithoutExtension(file));
+				var entry = await GetEntryAsync(Path.GetFileNameWithoutExtension(file), true);
 				if (entry != null)
 					entries.Add(entry);
 			}

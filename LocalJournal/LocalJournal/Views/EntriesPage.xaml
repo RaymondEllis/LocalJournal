@@ -9,6 +9,7 @@
              x:Name="BrowseEntriesPage">
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Setup Encryption" Clicked="SetupCryptro_Clicked" />
         <ToolbarItem Text="Add" Clicked="AddEntry_Clicked" />
     </ContentPage.ToolbarItems>
 

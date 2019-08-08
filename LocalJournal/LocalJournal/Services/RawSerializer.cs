@@ -9,13 +9,13 @@ namespace LocalJournal.Services
 {
 	class RawSerializer : IDataSerializer<TextEntry>
 	{
-		public async Task<TextEntry> ReadAsync(StreamReader sr, string id)
+		public async Task<TextEntry> ReadAsync(StreamReader sr, string id, bool ignoreBody)
 		{
 			var entry = new TextEntry()
 			{
 				Id = id,
 				Title = "Title not supported, " + id,
-				Body = await sr.ReadToEndAsync(),
+				Body = ignoreBody ? "" : await sr.ReadToEndAsync(),
 			};
 
 			return entry;

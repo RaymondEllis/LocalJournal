@@ -16,6 +16,12 @@
         <ScrollView>
             <StackLayout Spacing="20" Padding="15">
                 <Entry Text="{Binding Entry.Title}" Placeholder="Title" d:Text="Title" FontSize="Small" />
+                
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <Label Text="Encrypt" VerticalOptions="Center" />
+                    <Switch IsToggled="{Binding Entry.Encrypted}" />
+                </StackLayout>
+                
                 <Editor Text="{Binding Entry.Body}" Placeholder="Body" d:Text="Entry body" FontSize="Small" Margin="0"
                         Keyboard="Chat" AutoSize="TextChanges" HeightRequest="500"/>
             </StackLayout>

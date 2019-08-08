@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -10,18 +8,27 @@ namespace LocalJournal.Services
 {
 	class AesBasicCrypto : ICrypto
 	{
-		private const string StorageKey = "encryption_key";
 
 		public async Task<string> Decrypt(string str)
 		{
+			if (string.IsNullOrEmpty(str))
+				return str;
+
 			var key = await GetKey();
+			if (key == null)
+				return null;
 
 			return await DecryptStringFromBase64String_Aes(str, key);
 		}
 
 		public async Task<string> Encrypt(string str)
 		{
+			if (string.IsNullOrEmpty(str))
+				return str;
+
 			var key = await GetKey();
+			if (key == null)
+				return null;
 
 
 			using (var aes = Aes.Create())
@@ -36,20 +43,30 @@ namespace LocalJournal.Services
 
 		public async Task<bool> Unlock()
 		{
-			return await Task.FromResult(false);
+			if (await SecureStorage.GetAsync("encryption_key") == null)
+				return false;
 
+			return true;
 		}
 
 		static async Task<byte[]> GetKey()
 		{
 			try
 			{
-				return Convert.FromBase64String(await SecureStorage.GetAsync(StorageKey));
+				return CreateKey(await SecureStorage.GetAsync("encryption_key"));
 			}
 			catch
 			{
 				return null;
 			}
+		}
+
+		private static byte[] CreateKey(string password, int keyBytes = 32)
+		{
+			byte[] salt = new byte[] { 82, 76, 64, 51, 48, 37, 25, 13 };
+			int iterations = 1000;
+			using (var keyGenerator = new Rfc2898DeriveBytes(password, salt, iterations))
+				return keyGenerator.GetBytes(keyBytes);
 		}
 
 		static async Task<string> EncryptStringToBase64String_Aes(string plainText, byte[] key, byte[] IV)
@@ -64,12 +81,11 @@ namespace LocalJournal.Services
 			if (plainText == null || plainText.Length <= 0)
 				throw new ArgumentNullException("plainText");
 			if (key == null || key.Length <= 0)
-				throw new ArgumentNullException("Key");
+				throw new ArgumentNullException("key");
 			if (IV == null || IV.Length <= 0)
 				throw new ArgumentNullException("IV");
 
-			// Create an Aes object
-			// with the specified key and IV.
+			// Create an Aes object with the specified key and IV.
 			using (var aesAlg = Aes.Create())
 			{
 				aesAlg.Key = key;
@@ -104,12 +120,11 @@ namespace LocalJournal.Services
 			if (cipherText == null || cipherText.Length <= 0)
 				throw new ArgumentNullException("cipherText");
 			if (key == null || key.Length <= 0)
-				throw new ArgumentNullException("Key");
+				throw new ArgumentNullException("key");
 			if (IV == null || IV.Length <= 0)
 				throw new ArgumentNullException("IV");
 
-			// Create an Aes object
-			// with the specified key and IV.
+			// Create an Aes object with the specified key and IV.
 			using (var aesAlg = Aes.Create())
 			{
 				aesAlg.Key = key;

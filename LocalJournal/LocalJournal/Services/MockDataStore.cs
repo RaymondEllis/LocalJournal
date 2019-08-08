@@ -9,7 +9,7 @@ namespace LocalJournal.Services
 	public class MockDataStore : IDataStore<TextEntry>
 	{
 		readonly List<TextEntry> entries;
-		
+
 		public MockDataStore()
 		{
 			entries = new List<TextEntry>();
@@ -53,7 +53,7 @@ namespace LocalJournal.Services
 			return await Task.FromResult(true);
 		}
 
-		public async Task<TextEntry> GetEntryAsync(string id)
+		public async Task<TextEntry> GetEntryAsync(string id, bool ignoreBody = false)
 		{
 			return await Task.FromResult(entries.FirstOrDefault(entry => entry.Id == id));
 		}

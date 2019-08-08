@@ -1,5 +1,4 @@
 ﻿using NodaTime;
-using System;
 
 namespace LocalJournal.Models
 {
@@ -12,5 +11,7 @@ namespace LocalJournal.Models
 
 		public string Title { get; set; }
 		public string Body { get; set; }
+
+		public bool Encrypted { get; set; }
 	}
 }

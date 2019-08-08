@@ -27,11 +27,21 @@ namespace LocalJournal.Views
 			BindingContext = viewModel = new EntriesViewModel();
 		}
 
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (viewModel.Entries.Count == 0)
+				viewModel.LoadEntriesCommand.Execute(null);
+		}
+
 		async void OnEntrieSelected(object sender, SelectedItemChangedEventArgs args)
 		{
 			var entry = args.SelectedItem as TextEntry;
 			if (entry == null)
 				return;
+
+			entry = await viewModel.DataStore.GetEntryAsync(entry.Id);
 
 			await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
 
@@ -44,12 +54,9 @@ namespace LocalJournal.Views
 			await Navigation.PushModalAsync(new NavigationPage(new NewEntryPage()));
 		}
 
-		protected override void OnAppearing()
+		async void SetupCryptro_Clicked(object sender, EventArgs e)
 		{
-			base.OnAppearing();
-
-			if (viewModel.Entries.Count == 0)
-				viewModel.LoadEntriesCommand.Execute(null);
+			await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));
 		}
 	}
 }

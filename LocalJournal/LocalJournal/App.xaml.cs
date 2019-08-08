@@ -15,6 +15,7 @@ namespace LocalJournal
 
 			//DependencyService.Register<RawSerializer>();
 			DependencyService.Register<YamlFrontSerializer>();
+			DependencyService.Register<AesBasicCrypto>();
 			MainPage = new MainPage();
 		}
 
