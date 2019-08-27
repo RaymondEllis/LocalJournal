@@ -5,11 +5,11 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using YamlDotNet;
+using YamlDotNet.Helpers;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Helpers;
-using NodaTime.Text;
 using NodaTime;
+using NodaTime.Text;
 using Xamarin.Forms;
 
 namespace LocalJournal.Services
@@ -26,11 +26,12 @@ namespace LocalJournal.Services
 			var crypto = DependencyService.Get<ICrypto>();
 
 			string tmp = sr.ReadLine();
-			// Yaml
+			TextEntry entry;
+			// YAML
 			if (tmp == Identifier)
 			{
+				// Read YAML between the two identifiers.
 				var yamlSB = new StringBuilder();
-
 				while (!sr.EndOfStream)
 				{
 					tmp = sr.ReadLine();
@@ -40,41 +41,37 @@ namespace LocalJournal.Services
 					yamlSB.AppendLine(tmp);
 				}
 
+				// Deserialize YAML
 				var deserializer = new DeserializerBuilder()
 					.WithNamingConvention(new CamelCaseNamingConvention())
 					.WithTypeConverter(NodaTimeConverter)
 					.Build();
 
-				var entry = deserializer.Deserialize<TextEntry>(yamlSB.ToString());
+				entry = deserializer.Deserialize<TextEntry>(yamlSB.ToString());
 
+				// Read the body
+				entry.Id = id;
 				entry.Body = ignoreBody ? "" : await sr.ReadToEndAsync();
-
-				if (entry.Encrypted && !ignoreBody)
-				{
-					await crypto.Unlock();
-					entry.Body = await crypto.Decrypt(entry.Body);
-				}
-
-				return entry;
 			}
-			// No Yaml
+			// No YAML, read everything to body.
 			else
 			{
-				var entry = new TextEntry()
+				entry = new TextEntry()
 				{
 					Id = id,
 					Title = "Title not supported, " + id,
 					Body = ignoreBody ? "" : tmp + await sr.ReadToEndAsync(),
 				};
-
-				if (entry.Encrypted && !ignoreBody)
-				{
-					await crypto.Unlock();
-					entry.Body = await crypto.Decrypt(entry.Body);
-				}
-
-				return entry;
 			}
+
+			// Decrypt the body
+			if (entry.Encrypted && !ignoreBody)
+			{
+				await crypto.Unlock();
+				entry.Body = await crypto.Decrypt(entry.Body);
+			}
+
+			return entry;
 		}
 
 		public async Task<bool> WriteAsync(StreamWriter sw, TextEntry entry)
