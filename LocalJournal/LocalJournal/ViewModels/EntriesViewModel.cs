@@ -1,12 +1,10 @@
-﻿using System;
+﻿using LocalJournal.Models;
+using LocalJournal.Views;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
-
-using LocalJournal.Models;
-using LocalJournal.Views;
 
 namespace LocalJournal.ViewModels
 {
@@ -30,8 +28,17 @@ namespace LocalJournal.ViewModels
 			MessagingCenter.Subscribe<EntryEditPage, TextEntry>(this, "UpdateEntry", async (obj, entry) =>
 			 {
 				 if (await DataStore.UpdateEntryAsync(entry))
-					 Entries[Entries.IndexOf(entry)] = entry; // Refresh list
+					 Entries[EntryIndex(entry.Id)] = entry; // Refresh list
+
 			 });
+		}
+
+		private int EntryIndex(string id)
+		{
+			for (int index = 0; index < Entries.Count; ++index)
+				if (Entries[index].Id == id)
+					return index;
+			return -1;
 		}
 
 		async Task ExecuteLoadEntriesCommand()
