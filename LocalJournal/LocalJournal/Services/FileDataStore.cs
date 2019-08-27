@@ -1,6 +1,8 @@
 ﻿using LocalJournal.Models;
+using NodaTime;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -73,7 +75,7 @@ namespace LocalJournal.Services
 				if (entry != null)
 					entries.Add(entry);
 			}
-			return await Task.FromResult(entries);
+			return entries.OrderByDescending(e => e.CreationTime, OffsetDateTime.Comparer.Instant);
 		}
 
 		protected virtual string FileFromId(string id)

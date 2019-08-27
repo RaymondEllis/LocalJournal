@@ -1,20 +1,20 @@
 ﻿using LocalJournal.Models;
+using NodaTime;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.Storage.AccessCache;
-using Xamarin.Essentials;
+using Windows.Storage.Pickers;
 using Xamarin.Forms;
-using System;
-using Windows.Storage.Search;
 
 namespace LocalJournal.Services
 {
 	public class UWPFileDataStore : IDataStore<TextEntry>
 	{
-		StorageFolder folder;
+		private StorageFolder folder;
 		private readonly IDataSerializer<TextEntry> dataSerializer;
 
 		public UWPFileDataStore()
@@ -91,7 +91,7 @@ namespace LocalJournal.Services
 						entries.Add(entry);
 				}
 			}
-			return await Task.FromResult(entries);
+			return entries.OrderByDescending(e => e.CreationTime, OffsetDateTime.Comparer.Instant);
 		}
 
 		private string FileFromId(string id)
@@ -111,8 +111,10 @@ namespace LocalJournal.Services
 			}
 
 			// ask user to pick folder.
-			var folderPicker = new FolderPicker();
-			folderPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+			var folderPicker = new FolderPicker
+			{
+				SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+			};
 			folderPicker.FileTypeFilter.Add("*");
 
 			folder = await folderPicker.PickSingleFolderAsync();
