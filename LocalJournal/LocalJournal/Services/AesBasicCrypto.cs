@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -18,7 +19,15 @@ namespace LocalJournal.Services
 			if (key == null)
 				return null;
 
-			return await DecryptStringFromBase64String_Aes(str, key);
+			try
+			{
+				return await DecryptStringFromBase64String_Aes(str, key);
+			}
+			catch (CryptographicException ex)
+			{
+				Debug.WriteLine(ex);
+				return null;
+			}
 		}
 
 		public async Task<string> Encrypt(string str)
@@ -90,6 +99,7 @@ namespace LocalJournal.Services
 			{
 				aesAlg.Key = key;
 				aesAlg.IV = IV;
+				aesAlg.Padding = PaddingMode.PKCS7;
 
 				// Create an encryptor to perform the stream transform.
 				var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
@@ -129,6 +139,7 @@ namespace LocalJournal.Services
 			{
 				aesAlg.Key = key;
 				aesAlg.IV = IV;
+				aesAlg.Padding = PaddingMode.PKCS7;
 
 				// Create a decryptor to perform the stream transform.
 				var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);

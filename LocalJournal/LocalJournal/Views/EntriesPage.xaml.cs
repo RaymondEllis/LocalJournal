@@ -35,7 +35,7 @@ namespace LocalJournal.Views
 				viewModel.LoadEntriesCommand.Execute(null);
 		}
 
-		async void OnEntrieSelected(object sender, SelectedItemChangedEventArgs args)
+		async void OnEntrySelected(object sender, SelectedItemChangedEventArgs args)
 		{
 			var entry = args.SelectedItem as TextEntry;
 			if (entry == null)
@@ -43,7 +43,10 @@ namespace LocalJournal.Views
 
 			entry = await viewModel.DataStore.GetEntryAsync(entry.Id);
 
-			await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
+			if (entry.Encrypted && entry.Body == null)
+				await DisplayAlert("Unable to decrypt", "Invalid password", "OK");
+			else
+				await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
 
 			// Manually deselect entry.
 			EntriesListView.SelectedItem = null;

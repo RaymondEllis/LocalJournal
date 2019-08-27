@@ -22,7 +22,7 @@
                 IsPullToRefreshEnabled="true"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                 CachingStrategy="RecycleElement"
-                ItemSelected="OnEntrieSelected">
+                ItemSelected="OnEntrySelected">
             <d:ListView.ItemsSource>
                 <x:Array Type="{x:Type x:String}">
                     <x:String>First Entry</x:String>
