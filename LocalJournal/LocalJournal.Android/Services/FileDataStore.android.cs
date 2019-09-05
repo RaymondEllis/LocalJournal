@@ -1,4 +1,6 @@
 ﻿using Android.OS;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -14,10 +16,22 @@ namespace LocalJournal.Services
 			DataPath = Path.Combine(Environment.ExternalStorageDirectory.AbsolutePath, "journal");
 			Directory.CreateDirectory(DataPath);
 		}
-		protected override Task<bool> CheckPermission()
+
+		protected override async Task<bool> CheckPermission()
 		{
-			// ToDo: Check external permissions.
-			return Task.FromResult(true);
+			try
+			{
+				var status = await CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
+
+				if (status != PermissionStatus.Granted)
+					status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
+
+				return status == PermissionStatus.Granted;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		protected override string FileFromId(string id)

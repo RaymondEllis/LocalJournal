@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using Xamarin.Forms;
 using LocalJournal.Services;
+using Plugin.Permissions;
 
 namespace LocalJournal.Droid
 {
@@ -21,6 +22,7 @@ namespace LocalJournal.Droid
 
 			base.OnCreate(savedInstanceState);
 
+			Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
 			Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 			global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
@@ -31,8 +33,8 @@ namespace LocalJournal.Droid
 		}
 		public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
 		{
+			PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 			Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
 			base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
 	}
