@@ -7,11 +7,11 @@ using Windows.Storage.Pickers;
 
 namespace LocalJournal.Services
 {
-	public class UWPFileDataStore : FileDataStore
+	public class FileDataStore_Platform : FileDataStore
 	{
 		private StorageFolder folder;
 
-		public UWPFileDataStore()
+		public FileDataStore_Platform()
 			: base()
 		{
 		}

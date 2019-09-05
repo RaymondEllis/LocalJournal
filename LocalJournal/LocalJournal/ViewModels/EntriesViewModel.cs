@@ -19,7 +19,7 @@ namespace LocalJournal.ViewModels
 			Entries = new ObservableCollection<TextEntry>();
 			LoadEntriesCommand = new Command(async () => await ExecuteLoadEntriesCommand());
 
-			MessagingCenter.Subscribe<NewEntryPage, TextEntry>(this, "AddEntry", async (obj, entry) =>
+			MessagingCenter.Subscribe<EntryNewPage, TextEntry>(this, "AddEntry", async (obj, entry) =>
 			{
 				if (await DataStore.AddEntryAsync(entry))
 					Entries.Add(entry);

@@ -54,7 +54,7 @@ namespace LocalJournal.Views
 
 		async void AddEntry_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushModalAsync(new NavigationPage(new NewEntryPage()));
+			await Navigation.PushModalAsync(new NavigationPage(new EntryNewPage()));
 		}
 
 		async void SetupCryptro_Clicked(object sender, EventArgs e)

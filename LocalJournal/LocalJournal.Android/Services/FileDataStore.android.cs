@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace LocalJournal.Services
 {
-	public class AndroidFileDataStore : FileDataStore
+	public class FileDataStorePlatform : FileDataStore
 	{
 		public string DataPath { get; protected set; }
 
-		public AndroidFileDataStore()
+		public FileDataStorePlatform()
 			: base()
 		{
 			DataPath = Path.Combine(Environment.ExternalStorageDirectory.AbsolutePath, "journal");

@@ -25,7 +25,7 @@ namespace LocalJournal.Droid
 			global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
 
-			DependencyService.Register<AndroidFileDataStore>();
+			DependencyService.Register<FileDataStorePlatform>();
 
 			LoadApplication(new App());
 		}
