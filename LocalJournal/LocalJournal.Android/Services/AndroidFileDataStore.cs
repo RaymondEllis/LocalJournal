@@ -1,26 +1,43 @@
-﻿using Android.Content;
-using Android.OS;
-using LocalJournal.Models;
-using System.Collections.Generic;
+﻿using Android.OS;
 using System.IO;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
-using Xamarin.Forms;
 
 namespace LocalJournal.Services
 {
 	public class AndroidFileDataStore : FileDataStore
 	{
+		public string DataPath { get; protected set; }
+
 		public AndroidFileDataStore()
 			: base()
 		{
 			DataPath = Path.Combine(Environment.ExternalStorageDirectory.AbsolutePath, "journal");
+			Directory.CreateDirectory(DataPath);
 		}
-
-		protected override bool CheckPermission()
+		protected override Task<bool> CheckPermission()
 		{
 			// ToDo: Check external permissions.
-			return true;
+			return Task.FromResult(true);
+		}
+
+		protected override string FileFromId(string id)
+		{
+			return Path.Combine(DataPath, $"{id}.md");
+		}
+		protected override Task DeleteFile(string filename)
+		{
+			File.Delete(filename);
+			return null;
+		}
+
+		protected override Task<string[]> GetFiles()
+		{
+			return Task.FromResult(Directory.GetFiles(DataPath, "*.md"));
+		}
+
+		protected override Task<Stream> GetStreamAsync(string id, FileAccess access)
+		{
+			return Task.FromResult((Stream)new FileStream(FileFromId(id), FileMode.OpenOrCreate, access));
 		}
 	}
 }

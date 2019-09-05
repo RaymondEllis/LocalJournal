@@ -4,70 +4,68 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace LocalJournal.Services
 {
-	public class FileDataStore : IDataStore<TextEntry>
+	public abstract class FileDataStore : IDataStore<TextEntry>
 	{
-		public string DataPath { get; protected set; }
-
-		private readonly IDataSerializer<TextEntry> dataSerializer;
+		protected readonly IDataSerializer<TextEntry> dataSerializer;
 
 		public FileDataStore()
 		{
 			dataSerializer = DependencyService.Get<IDataSerializer<TextEntry>>();
-			DataPath = Path.Combine(FileSystem.AppDataDirectory, "journal");
 		}
 
 		public async Task<bool> AddEntryAsync(TextEntry entry)
 		{
-			if (!CheckPermission())
+			if (!await CheckPermission())
 				return false;
 
-			Directory.CreateDirectory(DataPath);
-			var file = FileFromId(entry.Id);
-			using (var sw = new StreamWriter(file))
+			using (var stream = await GetStreamAsync(entry.Id, FileAccess.Write))
+			using (var sw = new StreamWriter(stream))
 				return await dataSerializer.WriteAsync(sw, entry);
 		}
 
 		public async Task<bool> UpdateEntryAsync(TextEntry entry)
 		{
-			if (!CheckPermission())
+			if (!await CheckPermission())
 				return false;
 
 			entry.LastModified = MyDate.Now();
 
-			using (var sw = new StreamWriter(FileFromId(entry.Id)))
+			using (var stream = await GetStreamAsync(entry.Id, FileAccess.Write))
+			using (var sw = new StreamWriter(stream))
 				return await dataSerializer.WriteAsync(sw, entry);
 		}
 
-		public async Task<bool> DeleteEntryAsync(string id)
+		public virtual async Task<bool> DeleteEntryAsync(string id)
 		{
-			if (!CheckPermission())
+			if (!await CheckPermission())
 				return false;
 
-			File.Delete(FileFromId(id));
+			await DeleteFile(FileFromId(id));
 
-			return await Task.FromResult(true);
+			return true;
 		}
 
 		public async Task<TextEntry> GetEntryAsync(string id, bool ignoreBody = false)
 		{
-			if (!CheckPermission())
+			if (!await CheckPermission())
 				return null;
 
-			using (var sr = new StreamReader(FileFromId(id)))
+			using (var stream = await GetStreamAsync(id, FileAccess.Read))
+			using (var sr = new StreamReader(stream))
 				return await dataSerializer.ReadAsync(sr, id, ignoreBody);
 		}
 
 		public async Task<IEnumerable<TextEntry>> GetEntriesAsync(bool forceRefresh = false)
 		{
-			if (!CheckPermission())
+			if (!await CheckPermission())
 				return new List<TextEntry>(0);
 
-			var files = Directory.GetFiles(DataPath, "*.md");
+			var files = await GetFiles();
 			var entries = new List<TextEntry>(files.Length);
 			foreach (var file in files)
 			{
@@ -78,14 +76,14 @@ namespace LocalJournal.Services
 			return entries.OrderByDescending(e => e.CreationTime, OffsetDateTime.Comparer.Instant);
 		}
 
-		protected virtual string FileFromId(string id)
-		{
-			return Path.Combine(DataPath, $"{id}.md");
-		}
+		protected abstract Task<bool> CheckPermission();
 
-		protected virtual bool CheckPermission()
-		{
-			return true;
-		}
+		protected abstract string FileFromId(string id);
+
+		protected abstract Task DeleteFile(string filename);
+
+		protected abstract Task<string[]> GetFiles();
+
+		protected abstract Task<Stream> GetStreamAsync(string id, FileAccess access);
 	}
 }
