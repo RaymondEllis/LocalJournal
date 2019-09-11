@@ -18,6 +18,11 @@ namespace LocalJournal
 			return dt.ToString("uuuu'-'MM'-'dd' T'HH''mm''o<G>", null);
 		}
 
+		public static string ToIdString(this OffsetDateTime dt)
+		{
+			return dt.ToString("uuuu'-'MM'-'dd' T'HH''mm''o<G>", null);
+		}
+
 		public static OffsetDateTime Now()
 		{
 			return SystemClock.Instance.InTzdbSystemDefaultZone().GetCurrentOffsetDateTime();
