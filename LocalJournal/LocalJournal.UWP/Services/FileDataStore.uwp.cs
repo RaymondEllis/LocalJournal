@@ -76,5 +76,17 @@ namespace LocalJournal.Services
 					return null;
 			}
 		}
+
+		protected override async Task<bool> FileExists(string id)
+		{
+			try
+			{
+				return (await folder.GetFileAsync(FileFromId(id))) != null;
+			}
+			catch (FileNotFoundException)
+			{
+				return false;
+			}
+		}
 	}
 }

@@ -23,6 +23,8 @@ namespace LocalJournal.Services
 			if (!await CheckPermission())
 				return false;
 
+			entry.Id = await CreateUniqueID(entry.CreationTime.ToIdString());
+
 			using (var stream = await GetStreamAsync(entry.Id, FileAccess.Write))
 			using (var sw = new StreamWriter(stream))
 				return await dataSerializer.WriteAsync(sw, entry);
@@ -76,9 +78,23 @@ namespace LocalJournal.Services
 			return entries.OrderByDescending(e => e.CreationTime, OffsetDateTime.Comparer.Instant);
 		}
 
+		protected async Task<string> CreateUniqueID(string requestedId)
+		{
+			string id = requestedId;
+
+			int i = 0;
+			while (await FileExists(id))
+			{
+				id = $"{requestedId}_{++i}";
+			}
+			return id;
+		}
+
 		protected abstract Task<bool> CheckPermission();
 
 		protected abstract string FileFromId(string id);
+
+		protected abstract Task<bool> FileExists(string id);
 
 		protected abstract Task DeleteFile(string filename);
 

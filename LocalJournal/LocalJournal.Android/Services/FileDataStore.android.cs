@@ -53,5 +53,10 @@ namespace LocalJournal.Services
 		{
 			return Task.FromResult((Stream)new FileStream(FileFromId(id), FileMode.OpenOrCreate, access));
 		}
+
+		protected override Task<bool> FileExists(string id)
+		{
+			return Task.FromResult(File.Exists(FileFromId(id)));
+		}
 	}
 }

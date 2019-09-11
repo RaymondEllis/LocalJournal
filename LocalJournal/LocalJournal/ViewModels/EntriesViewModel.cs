@@ -19,17 +19,20 @@ namespace LocalJournal.ViewModels
 			Entries = new ObservableCollection<TextEntry>();
 			LoadEntriesCommand = new Command(async () => await ExecuteLoadEntriesCommand());
 
-			MessagingCenter.Subscribe<EntryNewPage, TextEntry>(this, "AddEntry", async (obj, entry) =>
-			{
-				if (await DataStore.AddEntryAsync(entry))
-					Entries.Add(entry);
-			});
-
 			MessagingCenter.Subscribe<EntryEditPage, TextEntry>(this, "UpdateEntry", async (obj, entry) =>
 			 {
-				 if (await DataStore.UpdateEntryAsync(entry))
-					 Entries[EntryIndex(entry.Id)] = entry; // Refresh list
+				 var index = EntryIndex(entry.Id);
 
+				 if (index == -1)
+				 {
+					 if (await DataStore.AddEntryAsync(entry))
+						 Entries.Add(entry);
+				 }
+				 else
+				 {
+					 if (await DataStore.UpdateEntryAsync(entry))
+						 Entries[index] = entry; // Refresh list
+				 }
 			 });
 		}
 

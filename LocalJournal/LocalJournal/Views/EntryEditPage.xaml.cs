@@ -19,12 +19,22 @@ namespace LocalJournal.Views
 		{
 			InitializeComponent();
 
-			Entry = entry;
-			//Entry = new TextEntry
-			//{
-			//	Title = "",
-			//	Body = "",
-			//};
+			if (entry != null)
+				Entry = entry;
+			else
+			{
+				var now = MyDate.Now();
+				Entry = new TextEntry
+				{
+					Id = null,
+
+					CreationTime = now,
+					LastModified = now,
+
+					Title = "",
+					Body = "",
+				};
+			}
 
 			BindingContext = this;
 		}
