@@ -40,8 +40,7 @@ namespace LocalJournal.Services
 		}
 		protected override Task DeleteFile(string filename)
 		{
-			File.Delete(filename);
-			return null;
+			return Task.Run(() => File.Delete(filename));
 		}
 
 		protected override Task<string[]> GetFiles()
