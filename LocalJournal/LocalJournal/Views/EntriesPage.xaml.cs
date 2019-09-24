@@ -57,6 +57,23 @@ namespace LocalJournal.Views
 			await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(null)));
 		}
 
+		async void DeleteEntry_Clicked(object sender, EventArgs e)
+		{
+			if ((sender as Button).BindingContext is TextEntry entry)
+			{
+				if (await DisplayAlert("Delete confirmation",
+					$"Are you sure you want to delete\n" +
+					$"Id: {entry.Id}\n" +
+					$"Title: {entry.Title}", "YES", "NO"))
+				{
+					await viewModel.DataStore.DeleteEntryAsync(entry.Id);
+					viewModel.LoadEntriesCommand.Execute(null);
+				}
+			}
+			else
+				await DisplayAlert("Nothing selected", "Unable to find entry to delete.", "OK");
+		}
+
 		async void SetupCryptro_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));

@@ -12,7 +12,7 @@
         <ToolbarItem Text="Setup Encryption" Clicked="SetupCryptro_Clicked" />
         <ToolbarItem Text="Add" Clicked="AddEntry_Clicked" />
     </ContentPage.ToolbarItems>
-
+    
     <StackLayout>
         <ListView x:Name="EntriesListView"
                 ItemsSource="{Binding Entries}"
@@ -36,13 +36,16 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Padding="10">
+                        <StackLayout Orientation="Horizontal" Padding="10">
                             <Label Text="{Binding Title}" 
                                 d:Text="{Binding .}"
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListEntryTextStyle}" 
                                 FontSize="16" />
-                            
+                            <Button Text="X"
+                                    Clicked="DeleteEntry_Clicked"
+                                    WidthRequest="50"
+                                    HorizontalOptions="EndAndExpand" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
