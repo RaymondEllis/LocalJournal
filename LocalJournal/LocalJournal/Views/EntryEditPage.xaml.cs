@@ -38,6 +38,9 @@ namespace LocalJournal.Views
 			}
 
 			BindingContext = this;
+
+			// Disable encrypted toggle when we are already encrypting.
+			Encrypted.IsEnabled = !Encrypted.IsToggled;
 		}
 
 		async void Save_Clicked(object sender, EventArgs e)
