@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using LocalJournal.Models;
+using LocalJournal.Services;
 
 namespace LocalJournal.Views
 {
@@ -48,6 +49,22 @@ namespace LocalJournal.Views
 		async void Cancel_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PopModalAsync();
+		}
+
+		private async void Encrypted_Toggled(object sender, ToggledEventArgs e)
+		{
+			// Before enabling encryption, check to make sure it's setup.
+			if (e.Value)
+			{
+				var cryptro = DependencyService.Get<ICrypto>();
+
+				if (!await cryptro.Unlock())
+				{
+					await DisplayAlert("Unable to encrypt", "Please make sure encryption is setup.", "OK");
+					Encrypted.IsToggled = false;
+					await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));
+				}
+			}
 		}
 	}
 }

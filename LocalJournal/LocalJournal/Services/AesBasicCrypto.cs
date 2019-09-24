@@ -52,7 +52,7 @@ namespace LocalJournal.Services
 
 		public async Task<bool> Unlock()
 		{
-			if (await SecureStorage.GetAsync("encryption_key") == null)
+			if (string.IsNullOrEmpty(await SecureStorage.GetAsync("encryption_key")))
 				return false;
 
 			return true;
