@@ -50,24 +50,24 @@ namespace LocalJournal.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task<bool> Unlock()
+		public async Task<bool> HasKey()
 		{
-			if (string.IsNullOrEmpty(await SecureStorage.GetAsync("encryption_key")))
-				return false;
+			return !string.IsNullOrEmpty(await SecureStorage.GetAsync("encryption_key"));
+		}
 
-			return true;
+		public async Task StoreKey(string password)
+		{
+			var key = Convert.ToBase64String(CreateKey(password));
+			await SecureStorage.SetAsync("encryption_key", key);
 		}
 
 		static async Task<byte[]> GetKey()
 		{
-			try
-			{
-				return CreateKey(await SecureStorage.GetAsync("encryption_key"));
-			}
-			catch
-			{
+			var key64 = await SecureStorage.GetAsync("encryption_key");
+			if (string.IsNullOrEmpty(key64))
 				return null;
-			}
+			else
+				return Convert.FromBase64String(key64);
 		}
 
 		private static byte[] CreateKey(string password, int keyBytes = 32)

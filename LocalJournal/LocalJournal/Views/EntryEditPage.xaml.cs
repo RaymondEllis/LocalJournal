@@ -61,9 +61,9 @@ namespace LocalJournal.Views
 			{
 				var cryptro = DependencyService.Get<ICrypto>();
 
-				if (!await cryptro.Unlock())
+				if (!await cryptro.HasKey())
 				{
-					await DisplayAlert("Unable to encrypt", "Please make sure encryption is setup.", "OK");
+					await DisplayAlert("Password not found!", "Please make sure encryption is setup.", "OK");
 					Encrypted.IsToggled = false;
 					await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));
 				}

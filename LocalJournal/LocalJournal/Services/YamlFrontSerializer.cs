@@ -67,7 +67,6 @@ namespace LocalJournal.Services
 			// Decrypt the body
 			if (entry.Encrypted && !ignoreBody)
 			{
-				await crypto.Unlock();
 				entry.Body = await crypto.Decrypt(entry.Body);
 			}
 
@@ -79,7 +78,7 @@ namespace LocalJournal.Services
 			var crypto = DependencyService.Get<ICrypto>();
 			if (entry.Encrypted)
 			{
-				if (!await crypto.Unlock())
+				if (!await crypto.HasKey())
 					return false;
 			}
 

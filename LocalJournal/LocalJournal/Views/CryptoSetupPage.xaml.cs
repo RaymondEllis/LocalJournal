@@ -13,6 +13,8 @@ namespace LocalJournal.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class CryptoSetupPage : ContentPage
 	{
+		private ICrypto Crypto => DependencyService.Get<ICrypto>();
+
 		public CryptoSetupPage()
 		{
 			InitializeComponent();
@@ -20,12 +22,10 @@ namespace LocalJournal.Views
 
 		protected override async void OnAppearing()
 		{
-			try
-			{
-				Password.Text = await SecureStorage.GetAsync("encryption_key");
-			}
-			catch
-			{ }
+			if (await Crypto.HasKey())
+				Password.Placeholder = "Has Password";
+			else
+				Password.Placeholder = "Enter a new password";
 		}
 
 		private async void Cancel_Clicked(object sender, EventArgs e)
@@ -35,12 +35,8 @@ namespace LocalJournal.Views
 
 		private async void Done_Clicked(object sender, EventArgs e)
 		{
-			try
-			{
-				await SecureStorage.SetAsync("encryption_key", Password.Text);
-			}
-			catch
-			{ }
+			await Crypto.StoreKey(Password.Text);
+
 			await Navigation.PopModalAsync();
 		}
 	}

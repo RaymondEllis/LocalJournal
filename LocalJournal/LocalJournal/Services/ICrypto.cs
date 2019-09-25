@@ -8,14 +8,23 @@ namespace LocalJournal.Services
 	interface ICrypto
 	{
 		/// <summary>
-		/// Fetch the key.
-		/// If key is encrypted, pop-up biometric, or ask user for password/key.
-		/// If never used, pop-up biometric, ask user to generate or enter key.
+		/// Checks if a valid key is on this device.
 		/// </summary>
-		Task<bool> Unlock();
+		Task<bool> HasKey();
 
+		/// <summary>
+		/// Stores the given <paramref name="password"/> as a hashed key.
+		/// </summary>
+		Task StoreKey(string password);
+
+		/// <summary>
+		/// Encrypt string with stored key.
+		/// </summary>
 		Task<string> Encrypt(string str);
 
+		/// <summary>
+		/// Decrypt string with stored key.
+		/// </summary>
 		Task<string> Decrypt(string str);
 	}
 }
