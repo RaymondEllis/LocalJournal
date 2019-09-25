@@ -16,6 +16,7 @@ namespace LocalJournal
 			//DependencyService.Register<RawSerializer>();
 			DependencyService.Register<YamlFrontSerializer>();
 			DependencyService.Register<AesBasicCrypto>();
+			DependencyService.Register<LockBiometricPin>();
 			MainPage = new MainPage();
 		}
 
@@ -27,6 +28,8 @@ namespace LocalJournal
 		protected override void OnSleep()
 		{
 			// Handle when your app sleeps
+
+			DependencyService.Get<ILock>()?.Lock();
 		}
 
 		protected override void OnResume()
