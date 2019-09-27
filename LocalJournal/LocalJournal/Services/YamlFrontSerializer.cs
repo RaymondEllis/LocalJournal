@@ -88,15 +88,16 @@ namespace LocalJournal.Services
 				.WithAttributeOverride<TextEntry>(m => m.Body, new YamlIgnoreAttribute())
 				.Build();
 
-			await sw.WriteLineAsync(Identifier);
-			await sw.WriteAsync(serializer.Serialize(entry));
-			//serializer.Serialize(sw, entry);
-			await sw.WriteLineAsync(Identifier);
+			await sw.WriteAsync(Identifier);
+			await sw.WriteAsync("\n");
+			await sw.WriteAsync(serializer.Serialize(entry).ToCrossPlatformEOL());
+			await sw.WriteAsync(Identifier);
+			await sw.WriteAsync("\n");
 
 			if (entry.Encrypted)
-				await sw.WriteAsync(await crypto.Encrypt(entry.Body));
+				await sw.WriteAsync(await crypto.Encrypt(entry.Body.ToCrossPlatformEOL()));
 			else
-				await sw.WriteAsync(entry.Body);
+				await sw.WriteAsync(entry.Body.ToCrossPlatformEOL());
 
 			return true;
 		}

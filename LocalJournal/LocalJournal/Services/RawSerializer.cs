@@ -23,7 +23,7 @@ namespace LocalJournal.Services
 
 		public async Task<bool> WriteAsync(StreamWriter sw, TextEntry entry)
 		{
-			await sw.WriteAsync(entry.Body);
+			await sw.WriteAsync(entry.Body.ToCrossPlatformEOL());
 			return true;
 		}
 	}
