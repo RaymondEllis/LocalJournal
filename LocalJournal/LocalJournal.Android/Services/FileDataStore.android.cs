@@ -50,7 +50,10 @@ namespace LocalJournal.Services
 
 		protected override Task<Stream> GetStreamAsync(string id, FileAccess access)
 		{
-			return Task.FromResult((Stream)new FileStream(FileFromId(id), FileMode.OpenOrCreate, access));
+			if (access == FileAccess.Read)
+				return Task.FromResult((Stream)new FileStream(FileFromId(id), FileMode.Open, access));
+			else
+				return Task.FromResult((Stream)new FileStream(FileFromId(id), FileMode.Create, access));
 		}
 
 		protected override Task<bool> FileExists(string id)

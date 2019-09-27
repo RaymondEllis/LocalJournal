@@ -39,8 +39,7 @@ namespace LocalJournal.Views
 
 			BindingContext = this;
 
-			// Disable encrypted toggle when we are already encrypting.
-			Encrypted.IsEnabled = !Encrypted.IsToggled;
+			Encrypted.IsToggled = Entry.Encrypted;
 		}
 
 		async void Save_Clicked(object sender, EventArgs e)
@@ -56,6 +55,9 @@ namespace LocalJournal.Views
 
 		private async void Encrypted_Toggled(object sender, ToggledEventArgs e)
 		{
+			if (e.Value == Entry.Encrypted)
+				return;
+
 			// Before enabling encryption, check to make sure it's setup.
 			if (e.Value)
 			{
@@ -64,10 +66,20 @@ namespace LocalJournal.Views
 				if (!await cryptro.HasKey())
 				{
 					await DisplayAlert("Password not found!", "Please make sure encryption is setup.", "OK");
-					Encrypted.IsToggled = false;
 					await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));
 				}
+				else
+					Entry.Encrypted = true;
 			}
+			// Alert the user when they are disabling encryption.
+			else
+			{
+				if (await DisplayAlert("Disable encryption", "Are you sure you want to disable encryption?", "YES", "NO"))
+				{
+					Entry.Encrypted = false;
+				}
+			}
+			Encrypted.IsToggled = Entry.Encrypted;
 		}
 	}
 }

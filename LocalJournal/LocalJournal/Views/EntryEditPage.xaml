@@ -20,7 +20,7 @@
 
                 <StackLayout Orientation="Horizontal" Spacing="10">
                     <Label Text="Encrypt" VerticalOptions="Center" />
-                    <Switch x:Name="Encrypted" Toggled="Encrypted_Toggled" IsToggled="{Binding Entry.Encrypted}" />
+                    <Switch x:Name="Encrypted" Toggled="Encrypted_Toggled" />
                 </StackLayout>
 
                 <Editor Text="{Binding Entry.Body}" Placeholder="Body" d:Text="Entry body" FontSize="Small" Margin="0"
