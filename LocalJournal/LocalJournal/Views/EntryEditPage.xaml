@@ -24,7 +24,7 @@
                 </StackLayout>
 
                 <Editor Text="{Binding Entry.Body}" Placeholder="Body" d:Text="Entry body" FontSize="Small" Margin="0"
-                        Keyboard="Chat" AutoSize="TextChanges" HeightRequest="500"/>
+                        Keyboard="Chat" AutoSize="TextChanges"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

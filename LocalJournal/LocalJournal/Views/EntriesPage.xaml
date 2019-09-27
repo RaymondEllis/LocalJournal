@@ -44,6 +44,7 @@
                                 FontSize="16" />
                             <Button Text="X"
                                     Clicked="DeleteEntry_Clicked"
+                                    BackgroundColor="Accent"
                                     WidthRequest="50"
                                     HorizontalOptions="EndAndExpand" />
                         </StackLayout>
