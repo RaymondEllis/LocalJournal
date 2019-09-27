@@ -11,9 +11,9 @@ namespace LocalJournal.ViewModels
 		{
 			Title = "About";
 
-			OpenWebCommand = new Command(() => Device.OpenUri(new Uri("https://xamarin.com/platform")));
+			OpenGitHubCommand = new Command(() => Device.OpenUri(new Uri("https://github.com/RaymondEllis/LocalJournal")));
 		}
 
-		public ICommand OpenWebCommand { get; }
+		public ICommand OpenGitHubCommand { get; }
 	}
 }
