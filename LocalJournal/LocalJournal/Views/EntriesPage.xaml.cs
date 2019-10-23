@@ -10,6 +10,7 @@ using Xamarin.Forms.Xaml;
 using LocalJournal.Models;
 using LocalJournal.Views;
 using LocalJournal.ViewModels;
+using LocalJournal.Services;
 
 namespace LocalJournal.Views
 {
@@ -41,12 +42,24 @@ namespace LocalJournal.Views
 			if (entry == null)
 				return;
 
-			entry = await viewModel.DataStore.GetEntryAsync(entry.Id);
+			bool userHasAccess = true;
 
-			if (entry.Encrypted && entry.Body == null)
-				await DisplayAlert("Unable to decrypt", "Invalid password", "OK");
-			else
-				await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
+			// If encrypted, check if locked.
+			if (entry.Encrypted)
+			{
+				var UILock = DependencyService.Get<ILock>();
+				userHasAccess = await UILock.UnlockAsync();
+			}
+
+			if (userHasAccess)
+			{
+				entry = await viewModel.DataStore.GetEntryAsync(entry.Id);
+
+				if (entry.Encrypted && entry.Body == null)
+					await DisplayAlert("Unable to decrypt", "Invalid password", "OK");
+				else
+					await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
+			}
 
 			// Manually deselect entry.
 			EntriesListView.SelectedItem = null;
