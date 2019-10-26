@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="TallyGames.LocalJournal"
-    Publisher="CN=e76fd273-1531-438f-8685-855d922cee91"
-    Version="1.0.0.0" />
+    Name="IndirectAlly.LocalJournal"
+    Publisher="CN=Indirect Ally"
+    Version="0.1.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>LocalJournal</DisplayName>
-    <PublisherDisplayName>Tally Games</PublisherDisplayName>
+    <PublisherDisplayName>Indirect Ally</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -45,6 +45,9 @@
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/>
+          <uap:Rotation Preference="portrait"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>

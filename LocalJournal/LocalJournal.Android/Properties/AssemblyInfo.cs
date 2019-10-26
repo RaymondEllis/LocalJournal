@@ -9,7 +9,7 @@ using Android.App;
 [assembly: AssemblyTitle("Local Journal")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Tally Games")]
+[assembly: AssemblyCompany("Indirect Ally")]
 [assembly: AssemblyProduct("LocalJournal.Android")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
