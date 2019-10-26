@@ -40,6 +40,25 @@ namespace LocalJournal.Views
 			BindingContext = this;
 
 			Encrypted.IsToggled = Entry.Encrypted;
+
+			MessagingCenter.Subscribe<App>(this, "OnResume", OnResume);
+		}
+
+		protected async void OnResume(App sender)
+		{
+			if (Entry.Encrypted)
+			{
+				var UILock = DependencyService.Get<ILock>();
+				if (!await UILock.UnlockAsync())
+				{
+					await Navigation.PopModalAsync();
+				}
+			}
+		}
+
+		protected override void OnDisappearing()
+		{
+			MessagingCenter.Unsubscribe<App>(this, "OnResume");
 		}
 
 		async void Save_Clicked(object sender, EventArgs e)

@@ -9,6 +9,8 @@ using Android.OS;
 using Xamarin.Forms;
 using LocalJournal.Services;
 using Plugin.Permissions;
+using Plugin.Fingerprint;
+using Plugin.CurrentActivity;
 
 namespace LocalJournal.Droid
 {
@@ -22,7 +24,8 @@ namespace LocalJournal.Droid
 
 			base.OnCreate(savedInstanceState);
 
-			Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
+			CrossFingerprint.SetCurrentActivityResolver(() => CrossCurrentActivity.Current.Activity);
+			CrossCurrentActivity.Current.Init(this, savedInstanceState);
 			Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 			global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
