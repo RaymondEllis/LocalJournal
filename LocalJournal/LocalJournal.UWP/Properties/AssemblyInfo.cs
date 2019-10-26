@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Local Journal")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Tally Games")]
-[assembly: AssemblyProduct("LocalJournal")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCompany("Indirect Ally")]
+[assembly: AssemblyProduct("Local Journal")]
+[assembly: AssemblyCopyright("Copyright ©Indirect Ally 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

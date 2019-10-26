@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <Company>Indirect Ally</Company>
+    <Authors>Raymond Ellis</Authors>
+    <Product>Local Journal</Product>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>local journal key.pfx</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
