@@ -13,7 +13,7 @@ namespace LocalJournal.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class CryptoSetupPage : ContentPage
 	{
-		private ICrypto Crypto => DependencyService.Get<ICrypto>();
+		private static ICrypto Crypto => DependencyService.Get<ICrypto>();
 
 		public CryptoSetupPage()
 		{
