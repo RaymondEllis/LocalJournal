@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Essentials;
 
 namespace LocalJournal.Services
 {
@@ -13,7 +12,7 @@ namespace LocalJournal.Services
 	{
 		protected readonly IDataSerializer<TextEntry> dataSerializer;
 
-		public FileDataStore()
+		protected FileDataStore()
 		{
 			dataSerializer = DependencyService.Get<IDataSerializer<TextEntry>>();
 		}

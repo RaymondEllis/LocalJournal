@@ -1,8 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using LocalJournal.Models;
-using LocalJournal.Services;
-using Xamarin.Forms;
+﻿using LocalJournal.Models;
+using MvvmHelpers;
 
 namespace LocalJournal.ViewModels
 {
@@ -32,6 +29,5 @@ namespace LocalJournal.ViewModels
 			Entry = entry;
 			Title = Entry.Title;
 		}
-
 	}
 }

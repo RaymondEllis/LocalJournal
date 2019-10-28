@@ -1,6 +1,7 @@
 ﻿using LocalJournal.Models;
 using LocalJournal.Services;
 using LocalJournal.Views;
+using MvvmHelpers;
 using MvvmHelpers.Commands;
 using System;
 using System.Collections.ObjectModel;
@@ -12,6 +13,8 @@ namespace LocalJournal.ViewModels
 {
 	public class EntriesViewModel : BaseViewModel
 	{
+		protected static IDataStore<TextEntry> DataStore => DependencyService.Get<IDataStore<TextEntry>>() ?? new MockDataStore();
+
 		public ObservableCollection<TextEntry> Entries { get; }
 
 		public AsyncCommand LoadEntriesCommand => new AsyncCommand(ExecuteLoadEntriesCommand);
