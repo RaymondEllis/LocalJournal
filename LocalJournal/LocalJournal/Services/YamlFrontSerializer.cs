@@ -43,7 +43,7 @@ namespace LocalJournal.Services
 
 				// Deserialize YAML
 				var deserializer = new DeserializerBuilder()
-					.WithNamingConvention(new CamelCaseNamingConvention())
+					.WithNamingConvention(CamelCaseNamingConvention.Instance)
 					.WithTypeConverter(NodaTimeConverter)
 					.Build();
 
@@ -83,7 +83,7 @@ namespace LocalJournal.Services
 			}
 
 			var serializer = new SerializerBuilder()
-				.WithNamingConvention(new CamelCaseNamingConvention())
+				.WithNamingConvention(CamelCaseNamingConvention.Instance)
 				.WithTypeConverter(NodaTimeConverter)
 				.WithAttributeOverride<TextEntry>(m => m.Body, new YamlIgnoreAttribute())
 				.Build();
