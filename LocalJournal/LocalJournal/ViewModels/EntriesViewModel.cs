@@ -1,5 +1,8 @@
 ﻿using LocalJournal.Models;
+using LocalJournal.Services;
 using LocalJournal.Views;
+using MvvmHelpers;
+using MvvmHelpers.Commands;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -10,14 +13,20 @@ namespace LocalJournal.ViewModels
 {
 	public class EntriesViewModel : BaseViewModel
 	{
-		public ObservableCollection<TextEntry> Entries { get; set; }
-		public Command LoadEntriesCommand { get; set; }
+		protected static IDataStore<TextEntry> DataStore => DependencyService.Get<IDataStore<TextEntry>>() ?? new MockDataStore();
+
+		public ObservableCollection<TextEntry> Entries { get; }
+
+		public AsyncCommand LoadEntriesCommand => new AsyncCommand(ExecuteLoadEntriesCommand);
+
+		public AsyncCommand<TextEntry> LoadEntryCommand => new AsyncCommand<TextEntry>(ExecuteLoadEntryCommand);
+
+		public AsyncCommand<TextEntry> DeleteEntryCommand => new AsyncCommand<TextEntry>(ExecuteDeleteEntryCommand);
 
 		public EntriesViewModel()
 		{
 			Title = "Browse";
 			Entries = new ObservableCollection<TextEntry>();
-			LoadEntriesCommand = new Command(async () => await ExecuteLoadEntriesCommand());
 
 			MessagingCenter.Subscribe<EntryEditPage, TextEntry>(this, "UpdateEntry", async (obj, entry) =>
 			 {
@@ -44,7 +53,7 @@ namespace LocalJournal.ViewModels
 			return -1;
 		}
 
-		async Task ExecuteLoadEntriesCommand()
+		private async Task ExecuteLoadEntriesCommand()
 		{
 			if (IsBusy)
 				return;
@@ -68,6 +77,34 @@ namespace LocalJournal.ViewModels
 			{
 				IsBusy = false;
 			}
+		}
+
+		private async Task ExecuteLoadEntryCommand(TextEntry entry)
+		{
+			bool userHasAccess = true;
+
+			// If encrypted, check if locked.
+			if (entry.Encrypted)
+			{
+				var UILock = DependencyService.Get<ILock>();
+				userHasAccess = await UILock.UnlockAsync();
+			}
+
+			if (userHasAccess)
+			{
+				entry = await DataStore.GetEntryAsync(entry.Id);
+
+				if (entry.Encrypted && entry.Body == null)
+					await Application.Current.MainPage.DisplayAlert("Unable to decrypt", "Invalid password", "OK");
+				else
+					await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
+			}
+		}
+
+		private async Task ExecuteDeleteEntryCommand(TextEntry entry)
+		{
+			await DataStore.DeleteEntryAsync(entry.Id);
+			await LoadEntriesCommand.ExecuteAsync();
 		}
 	}
 }

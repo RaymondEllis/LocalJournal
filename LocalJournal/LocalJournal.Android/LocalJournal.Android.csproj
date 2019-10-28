@@ -68,7 +68,7 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>5.0.0-beta</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.2.0.815419" />
+    <PackageReference Include="Xamarin.Forms" Version="4.3.0.908675" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.v4" Version="28.0.0.3" />
@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LocalJournal\LocalJournal.csproj">
-      <Project>{CACCC540-EE12-4412-9503-3C95BBBDA7EC}</Project>
+      <Project>{987ccdeb-9eb2-41ac-a043-c4052c64a88d}</Project>
       <Name>LocalJournal</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,7 +1,8 @@
-﻿using System;
+﻿using MvvmHelpers;
+using MvvmHelpers.Commands;
+using System;
 using System.Windows.Input;
-
-using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace LocalJournal.ViewModels
 {
@@ -11,7 +12,7 @@ namespace LocalJournal.ViewModels
 		{
 			Title = "About";
 
-			OpenGitHubCommand = new Command(() => Device.OpenUri(new Uri("https://github.com/RaymondEllis/LocalJournal")));
+			OpenGitHubCommand = new AsyncCommand(() => Launcher.OpenAsync(new Uri("https://github.com/RaymondEllis/LocalJournal")));
 		}
 
 		public ICommand OpenGitHubCommand { get; }

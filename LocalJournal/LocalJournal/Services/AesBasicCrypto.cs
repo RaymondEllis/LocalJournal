@@ -88,13 +88,13 @@ namespace LocalJournal.Services
 		{
 			// Check arguments.
 			if (plainText == null || plainText.Length <= 0)
-				throw new ArgumentNullException("plainText");
+				throw new ArgumentNullException(nameof(plainText));
 			if (key == null || key.Length <= 0)
-				throw new ArgumentNullException("key");
+				throw new ArgumentNullException(nameof(key));
 			if (IV == null || IV.Length <= 0)
-				throw new ArgumentNullException("IV");
+				throw new ArgumentNullException(nameof(IV));
 
-			// Create an Aes object with the specified key and IV.
+			// Create an AES object with the specified key and IV.
 			using (var aesAlg = Aes.Create())
 			{
 				aesAlg.Key = key;
@@ -128,13 +128,13 @@ namespace LocalJournal.Services
 		{
 			// Check arguments.
 			if (cipherText == null || cipherText.Length <= 0)
-				throw new ArgumentNullException("cipherText");
+				throw new ArgumentNullException(nameof(cipherText));
 			if (key == null || key.Length <= 0)
-				throw new ArgumentNullException("key");
+				throw new ArgumentNullException(nameof(key));
 			if (IV == null || IV.Length <= 0)
-				throw new ArgumentNullException("IV");
+				throw new ArgumentNullException(nameof(IV));
 
-			// Create an Aes object with the specified key and IV.
+			// Create an AES object with the specified key and IV.
 			using (var aesAlg = Aes.Create())
 			{
 				aesAlg.Key = key;

@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using LocalJournal.Models;
-using LocalJournal.Views;
 using LocalJournal.ViewModels;
-using LocalJournal.Services;
 
 namespace LocalJournal.Views
 {
@@ -28,38 +25,18 @@ namespace LocalJournal.Views
 			BindingContext = viewModel = new EntriesViewModel();
 		}
 
-		protected override void OnAppearing()
+		protected override async void OnAppearing()
 		{
 			base.OnAppearing();
 
 			if (viewModel.Entries.Count == 0)
-				viewModel.LoadEntriesCommand.Execute(null);
+				await viewModel.LoadEntriesCommand.ExecuteAsync();
 		}
 
 		async void OnEntrySelected(object sender, SelectedItemChangedEventArgs args)
 		{
-			var entry = args.SelectedItem as TextEntry;
-			if (entry == null)
-				return;
-
-			bool userHasAccess = true;
-
-			// If encrypted, check if locked.
-			if (entry.Encrypted)
-			{
-				var UILock = DependencyService.Get<ILock>();
-				userHasAccess = await UILock.UnlockAsync();
-			}
-
-			if (userHasAccess)
-			{
-				entry = await viewModel.DataStore.GetEntryAsync(entry.Id);
-
-				if (entry.Encrypted && entry.Body == null)
-					await DisplayAlert("Unable to decrypt", "Invalid password", "OK");
-				else
-					await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
-			}
+			if (args.SelectedItem is TextEntry entry)
+				await viewModel.LoadEntryCommand.ExecuteAsync(entry);
 
 			// Manually deselect entry.
 			EntriesListView.SelectedItem = null;
@@ -79,8 +56,7 @@ namespace LocalJournal.Views
 					$"Id: {entry.Id}\n" +
 					$"Title: {entry.Title}", "YES", "NO"))
 				{
-					await viewModel.DataStore.DeleteEntryAsync(entry.Id);
-					viewModel.LoadEntriesCommand.Execute(null);
+					await viewModel.DeleteEntryCommand.ExecuteAsync(entry);
 				}
 			}
 			else
