@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LocalJournal\LocalJournal.csproj">
-      <Project>{CACCC540-EE12-4412-9503-3C95BBBDA7EC}</Project>
+      <Project>{987ccdeb-9eb2-41ac-a043-c4052c64a88d}</Project>
       <Name>LocalJournal</Name>
     </ProjectReference>
   </ItemGroup>
