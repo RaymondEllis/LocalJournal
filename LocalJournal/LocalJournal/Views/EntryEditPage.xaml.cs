@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using LocalJournal.Models;
+using LocalJournal.ViewModels;
 using LocalJournal.Services;
 
 namespace LocalJournal.Views
@@ -14,30 +15,15 @@ namespace LocalJournal.Views
 	[DesignTimeVisible(false)]
 	public partial class EntryEditPage : ContentPage
 	{
-		public TextEntry Entry { get; set; }
+		readonly EntryEditViewModel viewModel;
+
+		TextEntry Entry => viewModel.Entry;
 
 		public EntryEditPage(TextEntry entry)
 		{
 			InitializeComponent();
 
-			if (entry != null)
-				Entry = entry;
-			else
-			{
-				var now = MyDate.Now();
-				Entry = new TextEntry
-				{
-					Id = null,
-
-					CreationTime = now,
-					LastModified = now,
-
-					Title = "",
-					Body = "",
-				};
-			}
-
-			BindingContext = this;
+			BindingContext = viewModel = new EntryEditViewModel(entry);
 
 			Encrypted.IsToggled = Entry.Encrypted;
 
