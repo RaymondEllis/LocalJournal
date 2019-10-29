@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalJournal.Android", "Loc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalJournal", "LocalJournal\LocalJournal\LocalJournal.csproj", "{987CCDEB-9EB2-41AC-A043-C4052C64A88D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalJournal.Tests", "LocalJournal\LocalJournal.Tests\LocalJournal.Tests.csproj", "{AA83F7F5-0377-4780-B771-2387EC389393}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,22 @@ Global
 		{987CCDEB-9EB2-41AC-A043-C4052C64A88D}.Release|x86.ActiveCfg = Release|Any CPU
 		{987CCDEB-9EB2-41AC-A043-C4052C64A88D}.Release|x86.Build.0 = Release|Any CPU
 		{987CCDEB-9EB2-41AC-A043-C4052C64A88D}.Release|x86.Deploy.0 = Release|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Debug|ARM.Build.0 = Debug|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Debug|x64.Build.0 = Debug|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Debug|x86.Build.0 = Debug|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Release|ARM.ActiveCfg = Release|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Release|ARM.Build.0 = Release|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Release|x64.ActiveCfg = Release|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Release|x64.Build.0 = Release|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Release|x86.ActiveCfg = Release|Any CPU
+		{AA83F7F5-0377-4780-B771-2387EC389393}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

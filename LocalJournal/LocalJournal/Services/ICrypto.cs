@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace LocalJournal.Services
 {
-	interface ICrypto
+	public interface ICrypto
 	{
 		/// <summary>
 		/// Checks if a valid key is on this device.
