@@ -4,6 +4,8 @@ namespace LocalJournal.Services
 {
 	public class CryptoMock : ICrypto
 	{
+		public string Key { get; private set; } = null;
+
 		public Task<string> Decrypt(string str)
 		{
 			return Task.FromResult(str + "<DECRYPTED>");
@@ -16,11 +18,12 @@ namespace LocalJournal.Services
 
 		public Task<bool> HasKey()
 		{
-			return Task.FromResult(true);
+			return Task.FromResult(Key != null);
 		}
 
 		public Task StoreKey(string password)
 		{
+			Key = password;
 			return Task.CompletedTask;
 		}
 	}
