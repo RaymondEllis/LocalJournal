@@ -123,13 +123,17 @@ Test Body<ENCRYPTED>"
 		[MemberData(nameof(WriteData))]
 		public async void Write(TextEntry input, string expected)
 		{
+			ICrypto cryptro = new CryptoMock();
+			await cryptro.StoreKey("some key");
+
+			var serializer = new YamlFrontSerializer(cryptro);
+
 			string result;
-			var serializer = new YamlFrontSerializer(new CryptoMock());
 			using var ms = new MemoryStream(50);
 			{
 				using var sw = new StreamWriter(ms);
 				{
-					await serializer.WriteAsync(sw, input);
+					Assert.True(await serializer.WriteAsync(sw, input));
 					sw.Flush();
 				}
 				result = Encoding.UTF8.GetString(ms.ToArray());
