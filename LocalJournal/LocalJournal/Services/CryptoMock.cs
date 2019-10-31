@@ -4,16 +4,16 @@ namespace LocalJournal.Services
 {
 	public class CryptoMock : ICrypto
 	{
-		public string Key { get; private set; } = null;
+		public string? Key { get; private set; } = null;
 
-		public Task<string> Decrypt(string str)
+		public Task<string?> Decrypt(string str)
 		{
-			return Task.FromResult(str + "<DECRYPTED>");
+			return Task.FromResult((string?)(str + "<DECRYPTED>"));
 		}
 
-		public Task<string> Encrypt(string str)
+		public Task<string?> Encrypt(string str)
 		{
-			return Task.FromResult(str + "<ENCRYPTED>");
+			return Task.FromResult((string?)(str + "<ENCRYPTED>"));
 		}
 
 		public Task<bool> HasKey()

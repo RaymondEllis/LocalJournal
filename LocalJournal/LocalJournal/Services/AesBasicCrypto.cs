@@ -10,7 +10,7 @@ namespace LocalJournal.Services
 	class AesBasicCrypto : ICrypto
 	{
 
-		public async Task<string> Decrypt(string str)
+		public async Task<string?> Decrypt(string str)
 		{
 			if (string.IsNullOrEmpty(str))
 				return str;
@@ -30,7 +30,7 @@ namespace LocalJournal.Services
 			}
 		}
 
-		public async Task<string> Encrypt(string str)
+		public async Task<string?> Encrypt(string str)
 		{
 			if (string.IsNullOrEmpty(str))
 				return str;
@@ -61,7 +61,7 @@ namespace LocalJournal.Services
 			await SecureStorage.SetAsync("encryption_key", key);
 		}
 
-		static async Task<byte[]> GetKey()
+		static async Task<byte[]?> GetKey()
 		{
 			var key64 = await SecureStorage.GetAsync("encryption_key");
 			if (string.IsNullOrEmpty(key64))

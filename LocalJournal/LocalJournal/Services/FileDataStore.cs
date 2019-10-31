@@ -1,5 +1,6 @@
 ﻿using LocalJournal.Models;
 using NodaTime;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,9 @@ namespace LocalJournal.Services
 			if (!await CheckPermission())
 				return false;
 
+			if (entry.Id != null)
+				throw new ArgumentException($"Expected a null 'Id' for a new entry, but got Id of '{entry.Id}!", nameof(entry));
+
 			entry.Id = await CreateUniqueID(entry.CreationTime.ToIdString());
 
 			using (var stream = await GetStreamAsync(entry.Id, FileAccess.Write))
@@ -33,6 +37,9 @@ namespace LocalJournal.Services
 		{
 			if (!await CheckPermission())
 				return false;
+
+			if (entry.Id == null)
+				throw new ArgumentException($"Expected a 'Id' for updating a entry, but got a null 'Id'!", nameof(entry));
 
 			entry.LastModified = MyDate.Now();
 
@@ -51,7 +58,7 @@ namespace LocalJournal.Services
 			return true;
 		}
 
-		public async Task<TextEntry> GetEntryAsync(string id, bool ignoreBody = false)
+		public async Task<TextEntry?> GetEntryAsync(string id, bool ignoreBody = false)
 		{
 			if (!await CheckPermission())
 				return null;

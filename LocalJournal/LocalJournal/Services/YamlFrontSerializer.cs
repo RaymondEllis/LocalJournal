@@ -87,7 +87,7 @@ namespace LocalJournal.Services
 			var serializer = new SerializerBuilder()
 				.WithNamingConvention(CamelCaseNamingConvention.Instance)
 				.WithTypeConverter(NodaTimeConverter)
-				.WithAttributeOverride<TextEntry>(m => m.Body, new YamlIgnoreAttribute())
+				.WithAttributeOverride(typeof(TextEntry), nameof(entry.Body), new YamlIgnoreAttribute())
 				.Build();
 
 			await sw.WriteAsync(Identifier);
@@ -96,10 +96,13 @@ namespace LocalJournal.Services
 			await sw.WriteAsync(Identifier);
 			await sw.WriteAsync("\n");
 
-			if (entry.Encrypted)
-				await sw.WriteAsync(await Crypto.Encrypt(entry.Body.ToCrossPlatformEOL()));
-			else
-				await sw.WriteAsync(entry.Body.ToCrossPlatformEOL());
+			if (entry.Body != null)
+			{
+				if (entry.Encrypted)
+					await sw.WriteAsync(await Crypto.Encrypt(entry.Body.ToCrossPlatformEOL()));
+				else
+					await sw.WriteAsync(entry.Body.ToCrossPlatformEOL());
+			}
 
 			return true;
 		}

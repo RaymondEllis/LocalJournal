@@ -36,7 +36,7 @@ namespace LocalJournal.Views
 		async void OnEntrySelected(object sender, SelectedItemChangedEventArgs args)
 		{
 			if (args.SelectedItem is TextEntry entry)
-				await viewModel.LoadEntryCommand.ExecuteAsync(entry);
+				await viewModel.EditEntryCommand.ExecuteAsync(entry);
 
 			// Manually deselect entry.
 			EntriesListView.SelectedItem = null;
@@ -49,7 +49,7 @@ namespace LocalJournal.Views
 
 		async void DeleteEntry_Clicked(object sender, EventArgs e)
 		{
-			if ((sender as Button).BindingContext is TextEntry entry)
+			if ((sender as BindableObject)?.BindingContext is TextEntry entry)
 			{
 				if (await DisplayAlert("Delete confirmation",
 					$"Are you sure you want to delete\n" +
