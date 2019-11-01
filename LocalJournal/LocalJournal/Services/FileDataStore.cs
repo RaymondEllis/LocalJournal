@@ -28,9 +28,9 @@ namespace LocalJournal.Services
 
 			entry.Id = await CreateUniqueID(entry.CreationTime.ToIdString());
 
-			using (var stream = await GetStreamAsync(entry.Id, FileAccess.Write))
-			using (var sw = new StreamWriter(stream))
-				return await dataSerializer.WriteAsync(sw, entry);
+			using var stream = await GetStreamAsync(entry.Id, FileAccess.Write);
+			using var sw = new StreamWriter(stream);
+			return await dataSerializer.WriteAsync(sw, entry);
 		}
 
 		public async Task<bool> UpdateEntryAsync(TextEntry entry)
@@ -43,9 +43,9 @@ namespace LocalJournal.Services
 
 			entry.LastModified = MyDate.Now();
 
-			using (var stream = await GetStreamAsync(entry.Id, FileAccess.Write))
-			using (var sw = new StreamWriter(stream))
-				return await dataSerializer.WriteAsync(sw, entry);
+			using var stream = await GetStreamAsync(entry.Id, FileAccess.Write);
+			using var sw = new StreamWriter(stream);
+			return await dataSerializer.WriteAsync(sw, entry);
 		}
 
 		public virtual async Task<bool> DeleteEntryAsync(string id)
@@ -63,9 +63,9 @@ namespace LocalJournal.Services
 			if (!await CheckPermission())
 				return null;
 
-			using (var stream = await GetStreamAsync(id, FileAccess.Read))
-			using (var sr = new StreamReader(stream))
-				return await dataSerializer.ReadAsync(sr, id, ignoreBody);
+			using var stream = await GetStreamAsync(id, FileAccess.Read);
+			using var sr = new StreamReader(stream);
+			return await dataSerializer.ReadAsync(sr, id, ignoreBody);
 		}
 
 		public async Task<IEnumerable<TextEntry>> GetEntriesAsync(bool forceRefresh = false)
