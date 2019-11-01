@@ -19,7 +19,7 @@ namespace LocalJournal.Views
 
 		TextEntry Entry => viewModel.Entry;
 
-		public EntryEditPage(TextEntry entry)
+		public EntryEditPage(TextEntry? entry)
 		{
 			InitializeComponent();
 

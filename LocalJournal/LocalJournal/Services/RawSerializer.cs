@@ -1,8 +1,5 @@
 ﻿using LocalJournal.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LocalJournal.Services
@@ -23,7 +20,8 @@ namespace LocalJournal.Services
 
 		public async Task<bool> WriteAsync(StreamWriter sw, TextEntry entry)
 		{
-			await sw.WriteAsync(entry.Body.ToCrossPlatformEOL());
+			if (entry.Body != null)
+				await sw.WriteAsync(entry.Body.ToCrossPlatformEOL());
 			return true;
 		}
 	}

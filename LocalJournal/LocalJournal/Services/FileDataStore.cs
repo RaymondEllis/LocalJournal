@@ -1,5 +1,6 @@
 ﻿using LocalJournal.Models;
 using NodaTime;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,11 +23,16 @@ namespace LocalJournal.Services
 			if (!await CheckPermission())
 				return false;
 
+			if (entry.Id != null)
+				throw new ArgumentException($"Expected a null 'Id' for a new entry, but got Id of '{entry.Id}!", nameof(entry));
+
 			entry.Id = await CreateUniqueID(entry.CreationTime.ToIdString());
 
-			using (var stream = await GetStreamAsync(entry.Id, FileAccess.Write))
-			using (var sw = new StreamWriter(stream))
-				return await dataSerializer.WriteAsync(sw, entry);
+			using var stream = await GetStreamAsync(entry.Id, FileAccess.Write);
+			if (stream == null)
+				return false;
+			using var sw = new StreamWriter(stream);
+			return await dataSerializer.WriteAsync(sw, entry);
 		}
 
 		public async Task<bool> UpdateEntryAsync(TextEntry entry)
@@ -34,11 +40,16 @@ namespace LocalJournal.Services
 			if (!await CheckPermission())
 				return false;
 
+			if (entry.Id == null)
+				throw new ArgumentException($"Expected a 'Id' for updating a entry, but got a null 'Id'!", nameof(entry));
+
 			entry.LastModified = MyDate.Now();
 
-			using (var stream = await GetStreamAsync(entry.Id, FileAccess.Write))
-			using (var sw = new StreamWriter(stream))
-				return await dataSerializer.WriteAsync(sw, entry);
+			using var stream = await GetStreamAsync(entry.Id, FileAccess.Write);
+			if (stream == null)
+				return false;
+			using var sw = new StreamWriter(stream);
+			return await dataSerializer.WriteAsync(sw, entry);
 		}
 
 		public virtual async Task<bool> DeleteEntryAsync(string id)
@@ -51,14 +62,16 @@ namespace LocalJournal.Services
 			return true;
 		}
 
-		public async Task<TextEntry> GetEntryAsync(string id, bool ignoreBody = false)
+		public async Task<TextEntry?> GetEntryAsync(string id, bool ignoreBody = false)
 		{
 			if (!await CheckPermission())
 				return null;
 
-			using (var stream = await GetStreamAsync(id, FileAccess.Read))
-			using (var sr = new StreamReader(stream))
-				return await dataSerializer.ReadAsync(sr, id, ignoreBody);
+			using var stream = await GetStreamAsync(id, FileAccess.Read);
+			if (stream == null)
+				return null;
+			using var sr = new StreamReader(stream);
+			return await dataSerializer.ReadAsync(sr, id, ignoreBody);
 		}
 
 		public async Task<IEnumerable<TextEntry>> GetEntriesAsync(bool forceRefresh = false)
@@ -99,6 +112,6 @@ namespace LocalJournal.Services
 
 		protected abstract Task<string[]> GetFiles();
 
-		protected abstract Task<Stream> GetStreamAsync(string id, FileAccess access);
+		protected abstract Task<Stream?> GetStreamAsync(string id, FileAccess access);
 	}
 }

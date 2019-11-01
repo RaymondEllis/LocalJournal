@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+#nullable enable
 
 namespace LocalJournal.UWP
 {
@@ -42,7 +43,7 @@ namespace LocalJournal.UWP
 		{
 
 
-			Frame rootFrame = Window.Current.Content as Frame;
+			Frame? rootFrame = Window.Current.Content as Frame;
 
 			// Do not repeat app initialization when the Window already has content,
 			// just ensure that the window is active

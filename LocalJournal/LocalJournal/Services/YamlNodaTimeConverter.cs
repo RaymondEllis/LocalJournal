@@ -23,9 +23,11 @@ namespace LocalJournal.Services
 			return type == typeof(T);
 		}
 
-		public object ReadYaml(IParser parser, Type type)
+		public object? ReadYaml(IParser parser, Type type)
 		{
-			var value = ((Scalar)parser.Current).Value;
+			if (!(parser.Current is Scalar parseEvent))
+				return null;
+			var value = parseEvent.Value;
 
 			var result = DateTimePattern.Parse(value);
 
@@ -37,9 +39,12 @@ namespace LocalJournal.Services
 			return result.Value;
 		}
 
-		public void WriteYaml(IEmitter emitter, object value, Type type)
+		public void WriteYaml(IEmitter emitter, object? value, Type type)
 		{
-			emitter.Emit(new Scalar(null, null, DateTimePattern.Format((T)value), ScalarStyle.Any, true, false));
+			if (value is T typedValue)
+				emitter.Emit(new Scalar(null, null, DateTimePattern.Format(typedValue), ScalarStyle.Any, true, false));
+			else
+				throw new ArgumentException($"Expecting type {typeof(T)}, but got {value?.GetType()}", nameof(value));
 		}
 	}
 }

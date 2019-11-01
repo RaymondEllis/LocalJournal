@@ -10,7 +10,7 @@ namespace LocalJournal.Services
 	class AesBasicCrypto : ICrypto
 	{
 
-		public async Task<string> Decrypt(string str)
+		public async Task<string?> Decrypt(string str)
 		{
 			if (string.IsNullOrEmpty(str))
 				return str;
@@ -30,7 +30,7 @@ namespace LocalJournal.Services
 			}
 		}
 
-		public async Task<string> Encrypt(string str)
+		public async Task<string?> Encrypt(string str)
 		{
 			if (string.IsNullOrEmpty(str))
 				return str;
@@ -61,7 +61,7 @@ namespace LocalJournal.Services
 			await SecureStorage.SetAsync("encryption_key", key);
 		}
 
-		static async Task<byte[]> GetKey()
+		static async Task<byte[]?> GetKey()
 		{
 			var key64 = await SecureStorage.GetAsync("encryption_key");
 			if (string.IsNullOrEmpty(key64))
@@ -74,8 +74,8 @@ namespace LocalJournal.Services
 		{
 			byte[] salt = new byte[] { 82, 76, 64, 51, 48, 37, 25, 13 };
 			int iterations = 1000;
-			using (var keyGenerator = new Rfc2898DeriveBytes(password, salt, iterations))
-				return keyGenerator.GetBytes(keyBytes);
+			using var keyGenerator = new Rfc2898DeriveBytes(password, salt, iterations);
+			return keyGenerator.GetBytes(keyBytes);
 		}
 
 		static async Task<string> EncryptStringToBase64String_Aes(string plainText, byte[] key, byte[] IV)
@@ -95,25 +95,21 @@ namespace LocalJournal.Services
 				throw new ArgumentNullException(nameof(IV));
 
 			// Create an AES object with the specified key and IV.
-			using (var aesAlg = Aes.Create())
-			{
-				aesAlg.Key = key;
-				aesAlg.IV = IV;
-				aesAlg.Padding = PaddingMode.PKCS7;
+			using var aesAlg = Aes.Create();
+			aesAlg.Key = key;
+			aesAlg.IV = IV;
+			aesAlg.Padding = PaddingMode.PKCS7;
 
-				// Create an encryptor to perform the stream transform.
-				var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+			// Create an encryptor to perform the stream transform.
+			var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
-				// Create the streams used for encryption.
-				using (var msEncrypt = new MemoryStream())
-				{
-					using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-					using (var swEncrypt = new StreamWriter(csEncrypt))
-						await swEncrypt.WriteAsync(plainText);
+			// Create the streams used for encryption.
+			using var msEncrypt = new MemoryStream();
+			using var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
+			using var swEncrypt = new StreamWriter(csEncrypt);
+			await swEncrypt.WriteAsync(plainText);
 
-					return msEncrypt.ToArray();
-				}
-			}
+			return msEncrypt.ToArray();
 		}
 
 		static async Task<string> DecryptStringFromBase64String_Aes(string data, byte[] key)
@@ -135,21 +131,19 @@ namespace LocalJournal.Services
 				throw new ArgumentNullException(nameof(IV));
 
 			// Create an AES object with the specified key and IV.
-			using (var aesAlg = Aes.Create())
-			{
-				aesAlg.Key = key;
-				aesAlg.IV = IV;
-				aesAlg.Padding = PaddingMode.PKCS7;
+			using var aesAlg = Aes.Create();
+			aesAlg.Key = key;
+			aesAlg.IV = IV;
+			aesAlg.Padding = PaddingMode.PKCS7;
 
-				// Create a decryptor to perform the stream transform.
-				var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+			// Create a decryptor to perform the stream transform.
+			var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-				// Create the streams used for decryption.
-				using (var msDecrypt = new MemoryStream(cipherText))
-				using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-				using (var srDecrypt = new StreamReader(csDecrypt))
-					return await srDecrypt.ReadToEndAsync();
-			}
+			// Create the streams used for decryption.
+			using var msDecrypt = new MemoryStream(cipherText);
+			using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+			using var srDecrypt = new StreamReader(csDecrypt);
+			return await srDecrypt.ReadToEndAsync();
 		}
 	}
 }

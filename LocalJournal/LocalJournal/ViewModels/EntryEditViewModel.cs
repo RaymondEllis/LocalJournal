@@ -7,7 +7,7 @@ namespace LocalJournal.ViewModels
 	{
 		public TextEntry Entry { get; }
 
-		public EntryEditViewModel(TextEntry entry = null)
+		public EntryEditViewModel(TextEntry? entry)
 		{
 			if (entry != null)
 				Entry = entry;
@@ -26,7 +26,6 @@ namespace LocalJournal.ViewModels
 				};
 			}
 
-			Entry = entry;
 			Title = Entry.Title;
 		}
 	}

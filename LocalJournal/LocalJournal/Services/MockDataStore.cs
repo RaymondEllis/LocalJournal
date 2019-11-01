@@ -53,7 +53,7 @@ namespace LocalJournal.Services
 			return await Task.FromResult(true);
 		}
 
-		public async Task<TextEntry> GetEntryAsync(string id, bool ignoreBody = false)
+		public async Task<TextEntry?> GetEntryAsync(string id, bool ignoreBody = false)
 		{
 			return await Task.FromResult(entries.FirstOrDefault(entry => entry.Id == id));
 		}

@@ -19,7 +19,7 @@ namespace LocalJournal.ViewModels
 
 		public AsyncCommand LoadEntriesCommand => new AsyncCommand(ExecuteLoadEntriesCommand);
 
-		public AsyncCommand<TextEntry> LoadEntryCommand => new AsyncCommand<TextEntry>(ExecuteLoadEntryCommand);
+		public AsyncCommand<TextEntry> EditEntryCommand => new AsyncCommand<TextEntry>(ExecuteEditEntryCommand);
 
 		public AsyncCommand<TextEntry> DeleteEntryCommand => new AsyncCommand<TextEntry>(ExecuteDeleteEntryCommand);
 
@@ -45,11 +45,15 @@ namespace LocalJournal.ViewModels
 			 });
 		}
 
-		private int EntryIndex(string id)
+		private int EntryIndex(string? id)
 		{
+			if (id is null)
+				return -1;
+
 			for (int index = 0; index < Entries.Count; ++index)
 				if (Entries[index].Id == id)
 					return index;
+
 			return -1;
 		}
 
@@ -79,12 +83,18 @@ namespace LocalJournal.ViewModels
 			}
 		}
 
-		private async Task ExecuteLoadEntryCommand(TextEntry entry)
+		private async Task ExecuteEditEntryCommand(TextEntry entryMeta)
 		{
 			bool userHasAccess = true;
 
+			if (entryMeta == null || entryMeta.Id == null)
+			{
+
+				return;
+			}
+
 			// If encrypted, check if locked.
-			if (entry.Encrypted)
+			if (entryMeta.Encrypted)
 			{
 				var UILock = DependencyService.Get<ILock>();
 				userHasAccess = await UILock.UnlockAsync();
@@ -92,9 +102,9 @@ namespace LocalJournal.ViewModels
 
 			if (userHasAccess)
 			{
-				entry = await DataStore.GetEntryAsync(entry.Id);
+				var entry = await DataStore.GetEntryAsync(entryMeta.Id);
 
-				if (entry.Encrypted && entry.Body == null)
+				if (entry == null || (entry.Encrypted && entry.Body == null))
 					await Application.Current.MainPage.DisplayAlert("Unable to decrypt", "Invalid password", "OK");
 				else
 					await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
@@ -103,6 +113,8 @@ namespace LocalJournal.ViewModels
 
 		private async Task ExecuteDeleteEntryCommand(TextEntry entry)
 		{
+			if (entry?.Id is null)
+				return;
 			await DataStore.DeleteEntryAsync(entry.Id);
 			await LoadEntriesCommand.ExecuteAsync();
 		}

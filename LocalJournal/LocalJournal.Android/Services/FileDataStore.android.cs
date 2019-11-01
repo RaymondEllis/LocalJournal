@@ -3,6 +3,7 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System.IO;
 using System.Threading.Tasks;
+#nullable enable
 
 namespace LocalJournal.Services
 {
@@ -48,12 +49,12 @@ namespace LocalJournal.Services
 			return Task.FromResult(Directory.GetFiles(DataPath, "*.md"));
 		}
 
-		protected override Task<Stream> GetStreamAsync(string id, FileAccess access)
+		protected override Task<Stream?> GetStreamAsync(string id, FileAccess access)
 		{
 			if (access == FileAccess.Read)
-				return Task.FromResult((Stream)new FileStream(FileFromId(id), FileMode.Open, access));
+				return Task.FromResult((Stream?)new FileStream(FileFromId(id), FileMode.Open, access));
 			else
-				return Task.FromResult((Stream)new FileStream(FileFromId(id), FileMode.Create, access));
+				return Task.FromResult((Stream?)new FileStream(FileFromId(id), FileMode.Create, access));
 		}
 
 		protected override Task<bool> FileExists(string id)
