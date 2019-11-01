@@ -54,6 +54,7 @@ namespace LocalJournal.UWP
 
 				rootFrame.NavigationFailed += OnNavigationFailed;
 
+				Xamarin.Forms.Forms.SetFlags("Shell_UWP_Experimental");
 				Xamarin.Forms.Forms.Init(e);
 
 
