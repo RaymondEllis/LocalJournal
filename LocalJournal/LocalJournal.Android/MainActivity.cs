@@ -11,6 +11,7 @@ using LocalJournal.Services;
 using Plugin.Permissions;
 using Plugin.Fingerprint;
 using Plugin.CurrentActivity;
+#nullable enable
 
 namespace LocalJournal.Droid
 {
