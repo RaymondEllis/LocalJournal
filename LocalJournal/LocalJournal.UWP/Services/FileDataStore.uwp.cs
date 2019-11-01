@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+#nullable enable
 
 namespace LocalJournal.Services
 {
 	public class FileDataStore_Platform : FileDataStore
 	{
-		private StorageFolder folder;
+		private StorageFolder? folder;
 
 		public FileDataStore_Platform()
 			: base()
@@ -51,20 +52,20 @@ namespace LocalJournal.Services
 
 		protected override async Task DeleteFile(string filename)
 		{
-			var file = await folder.GetFileAsync(filename);
+			var file = await folder!.GetFileAsync(filename);
 			await file.DeleteAsync();
 		}
 
 		protected override async Task<string[]> GetFiles()
 		{
-			var files = await folder.GetFilesAsync();
+			var files = await folder!.GetFilesAsync();
 			var result = new string[files.Count];
 			for (int i = 0; i < result.Length; ++i)
 				result[i] = files[i].Name;
 			return result;
 		}
 
-		protected override async Task<Stream> GetStreamAsync(string id, FileAccess access)
+		protected override async Task<Stream?> GetStreamAsync(string id, FileAccess access)
 		{
 			switch (access)
 			{
@@ -81,7 +82,7 @@ namespace LocalJournal.Services
 		{
 			try
 			{
-				return (await folder.GetFileAsync(FileFromId(id))) != null;
+				return (await folder!.GetFileAsync(FileFromId(id))) != null;
 			}
 			catch (FileNotFoundException)
 			{

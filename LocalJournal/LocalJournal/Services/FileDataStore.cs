@@ -29,6 +29,8 @@ namespace LocalJournal.Services
 			entry.Id = await CreateUniqueID(entry.CreationTime.ToIdString());
 
 			using var stream = await GetStreamAsync(entry.Id, FileAccess.Write);
+			if (stream == null)
+				return false;
 			using var sw = new StreamWriter(stream);
 			return await dataSerializer.WriteAsync(sw, entry);
 		}
@@ -44,6 +46,8 @@ namespace LocalJournal.Services
 			entry.LastModified = MyDate.Now();
 
 			using var stream = await GetStreamAsync(entry.Id, FileAccess.Write);
+			if (stream == null)
+				return false;
 			using var sw = new StreamWriter(stream);
 			return await dataSerializer.WriteAsync(sw, entry);
 		}
@@ -64,6 +68,8 @@ namespace LocalJournal.Services
 				return null;
 
 			using var stream = await GetStreamAsync(id, FileAccess.Read);
+			if (stream == null)
+				return null;
 			using var sr = new StreamReader(stream);
 			return await dataSerializer.ReadAsync(sr, id, ignoreBody);
 		}
@@ -106,6 +112,6 @@ namespace LocalJournal.Services
 
 		protected abstract Task<string[]> GetFiles();
 
-		protected abstract Task<Stream> GetStreamAsync(string id, FileAccess access);
+		protected abstract Task<Stream?> GetStreamAsync(string id, FileAccess access);
 	}
 }
