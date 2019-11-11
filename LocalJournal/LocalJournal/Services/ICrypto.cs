@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace LocalJournal.Services
 {
@@ -17,11 +18,24 @@ namespace LocalJournal.Services
 		/// <summary>
 		/// Encrypt string with stored key.
 		/// </summary>
-		Task<string?> Encrypt(string str);
+		Task<string> Encrypt(string str);
 
 		/// <summary>
 		/// Decrypt string with stored key.
 		/// </summary>
-		Task<string?> Decrypt(string str);
+		Task<string> Decrypt(string str);
+	}
+
+	public class InvalidPasswordException : Exception
+	{
+		public InvalidPasswordException()
+		{
+		}
+		public InvalidPasswordException(string message) : base(message)
+		{
+		}
+		public InvalidPasswordException(string message, Exception innerException) : base(message, innerException)
+		{
+		}
 	}
 }

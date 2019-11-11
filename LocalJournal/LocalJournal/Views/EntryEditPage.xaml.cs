@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LocalJournal.Models;
+using LocalJournal.Services;
+using LocalJournal.ViewModels;
+using System;
 using System.ComponentModel;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-using LocalJournal.Models;
-using LocalJournal.ViewModels;
-using LocalJournal.Services;
 
 namespace LocalJournal.Views
 {
@@ -19,11 +16,18 @@ namespace LocalJournal.Views
 
 		TextEntry Entry => viewModel.Entry;
 
-		public EntryEditPage(TextEntry? entry)
+		public EntryEditPage(EntryBase? entry)
 		{
 			InitializeComponent();
 
-			BindingContext = viewModel = new EntryEditViewModel(entry);
+			if (entry is TextEntry textEntry)
+				BindingContext = viewModel = new EntryEditViewModel(textEntry);
+			else if (entry is null)
+				BindingContext = viewModel = new EntryEditViewModel(null);
+			else
+				throw new NotSupportedException(
+					$"Currently only TextEntry is supported in the EntryEditPage, but was passed {entry?.GetType().Name}");
+
 
 			Encrypted.IsToggled = Entry.Encrypted;
 
@@ -49,7 +53,7 @@ namespace LocalJournal.Views
 
 		async void Save_Clicked(object sender, EventArgs e)
 		{
-			MessagingCenter.Send(this, "UpdateEntry", Entry);
+			MessagingCenter.Send(this, "UpdateEntry", (EntryBase)Entry);
 			await Navigation.PopModalAsync();
 		}
 

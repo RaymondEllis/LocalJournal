@@ -6,13 +6,13 @@ using LocalJournal.Models;
 
 namespace LocalJournal.Services
 {
-	public class MockDataStore : IDataStore<TextEntry>
+	public class MockDataStore : IDataStore<EntryBase>
 	{
-		readonly List<TextEntry> entries;
+		readonly List<EntryBase> entries;
 
 		public MockDataStore()
 		{
-			entries = new List<TextEntry>();
+			entries = new List<EntryBase>();
 			var mockEntries = new List<TextEntry>
 			{
 				new TextEntry { Id = Guid.NewGuid().ToString(), Title = "[mock] First entry ", Body="This is body of a text entry." },
@@ -29,16 +29,16 @@ namespace LocalJournal.Services
 			}
 		}
 
-		public async Task<bool> AddEntryAsync(TextEntry entry)
+		public async Task<bool> AddEntryAsync(EntryBase entry)
 		{
 			entries.Add(entry);
 
 			return await Task.FromResult(true);
 		}
 
-		public async Task<bool> UpdateEntryAsync(TextEntry entry)
+		public async Task<bool> UpdateEntryAsync(EntryBase entry)
 		{
-			var oldEntry = entries.Where((TextEntry arg) => arg.Id == entry.Id).FirstOrDefault();
+			var oldEntry = entries.Where((EntryBase arg) => arg.Id == entry.Id).FirstOrDefault();
 			entries.Remove(oldEntry);
 			entries.Add(entry);
 
@@ -47,18 +47,18 @@ namespace LocalJournal.Services
 
 		public async Task<bool> DeleteEntryAsync(string id)
 		{
-			var oldEntry = entries.Where((TextEntry arg) => arg.Id == id).FirstOrDefault();
+			var oldEntry = entries.Where((EntryBase arg) => arg.Id == id).FirstOrDefault();
 			entries.Remove(oldEntry);
 
 			return await Task.FromResult(true);
 		}
 
-		public async Task<TextEntry?> GetEntryAsync(string id, bool ignoreBody = false)
+		public async Task<EntryBase?> GetEntryAsync(string id, bool ignoreBody = false)
 		{
 			return await Task.FromResult(entries.FirstOrDefault(entry => entry.Id == id));
 		}
 
-		public async Task<IEnumerable<TextEntry>> GetEntriesAsync(bool forceRefresh = false)
+		public async Task<IEnumerable<EntryBase>> GetEntriesAsync(bool forceRefresh = false)
 		{
 			return await Task.FromResult(entries);
 		}

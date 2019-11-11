@@ -8,6 +8,7 @@ using Xamarin.Forms.Xaml;
 
 using LocalJournal.Models;
 using LocalJournal.ViewModels;
+using LocalJournal.Services;
 
 namespace LocalJournal.Views
 {
@@ -22,7 +23,7 @@ namespace LocalJournal.Views
 		{
 			InitializeComponent();
 
-			BindingContext = viewModel = new EntriesViewModel();
+			BindingContext = viewModel = new EntriesViewModel(DependencyService.Get<IDataStore<EntryBase>>());
 		}
 
 		protected override async void OnAppearing()
@@ -35,7 +36,7 @@ namespace LocalJournal.Views
 
 		async void OnEntrySelected(object sender, SelectedItemChangedEventArgs args)
 		{
-			if (args.SelectedItem is TextEntry entry)
+			if (args.SelectedItem is EntryMeta entry)
 				await viewModel.EditEntryCommand.ExecuteAsync(entry);
 
 			// Manually deselect entry.
@@ -49,7 +50,7 @@ namespace LocalJournal.Views
 
 		async void DeleteEntry_Clicked(object sender, EventArgs e)
 		{
-			if ((sender as BindableObject)?.BindingContext is TextEntry entry)
+			if ((sender as BindableObject)?.BindingContext is EntryMeta entry)
 			{
 				if (await DisplayAlert("Delete confirmation",
 					$"Are you sure you want to delete\n" +

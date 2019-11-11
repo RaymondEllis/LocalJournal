@@ -3,6 +3,7 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System.IO;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 #nullable enable
 
 namespace LocalJournal.Services
@@ -12,7 +13,7 @@ namespace LocalJournal.Services
 		public string DataPath { get; protected set; }
 
 		public FileDataStorePlatform()
-			: base()
+			: base(DependencyService.Get<IDataSerializer<LocalJournal.Models.EntryBase>>())
 		{
 			DataPath = Path.Combine(Environment.ExternalStorageDirectory.AbsolutePath, "journal");
 			Directory.CreateDirectory(DataPath);

@@ -5,20 +5,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace LocalJournal.Services
 {
-	public abstract class FileDataStore : IDataStore<TextEntry>
+	public abstract class FileDataStore : IDataStore<EntryBase>
 	{
-		protected readonly IDataSerializer<TextEntry> dataSerializer;
+		protected readonly IDataSerializer<EntryBase> dataSerializer;
 
-		protected FileDataStore()
+		protected FileDataStore(IDataSerializer<EntryBase> dataSerializer)
 		{
-			dataSerializer = DependencyService.Get<IDataSerializer<TextEntry>>();
+			this.dataSerializer = dataSerializer;
 		}
 
-		public async Task<bool> AddEntryAsync(TextEntry entry)
+		public async Task<bool> AddEntryAsync(EntryBase entry)
 		{
 			if (!await CheckPermission())
 				return false;
@@ -35,7 +34,7 @@ namespace LocalJournal.Services
 			return await dataSerializer.WriteAsync(sw, entry);
 		}
 
-		public async Task<bool> UpdateEntryAsync(TextEntry entry)
+		public async Task<bool> UpdateEntryAsync(EntryBase entry)
 		{
 			if (!await CheckPermission())
 				return false;
@@ -62,7 +61,7 @@ namespace LocalJournal.Services
 			return true;
 		}
 
-		public async Task<TextEntry?> GetEntryAsync(string id, bool ignoreBody = false)
+		public async Task<EntryBase?> GetEntryAsync(string id, bool ignoreBody = false)
 		{
 			if (!await CheckPermission())
 				return null;
@@ -74,13 +73,13 @@ namespace LocalJournal.Services
 			return await dataSerializer.ReadAsync(sr, id, ignoreBody);
 		}
 
-		public async Task<IEnumerable<TextEntry>> GetEntriesAsync(bool forceRefresh = false)
+		public async Task<IEnumerable<EntryBase>> GetEntriesAsync(bool forceRefresh = false)
 		{
 			if (!await CheckPermission())
-				return new List<TextEntry>(0);
+				return new List<EntryBase>(0);
 
 			var files = await GetFiles();
-			var entries = new List<TextEntry>(files.Length);
+			var entries = new List<EntryBase>(files.Length);
 			foreach (var file in files)
 			{
 				var entry = await GetEntryAsync(Path.GetFileNameWithoutExtension(file), true);

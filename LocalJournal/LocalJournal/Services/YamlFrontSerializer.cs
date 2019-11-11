@@ -9,7 +9,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace LocalJournal.Services
 {
-	public class YamlFrontSerializer : IDataSerializer<TextEntry>
+	public class YamlFrontSerializer : IDataSerializer<EntryBase>
 	{
 		private const string Identifier = "---";
 
@@ -26,7 +26,7 @@ namespace LocalJournal.Services
 			Crypto = crypto;
 		}
 
-		public async Task<TextEntry> ReadAsync(StreamReader sr, string id, bool ignoreBody)
+		public async Task<EntryBase> ReadAsync(StreamReader sr, string id, bool ignoreBody)
 		{
 			string tmp = sr.ReadLine();
 			TextEntry entry;
@@ -50,33 +50,57 @@ namespace LocalJournal.Services
 					.WithTypeConverter(NodaTimeConverter)
 					.Build();
 
+				if (ignoreBody)
+				{
+					return deserializer.Deserialize<EntryMeta>(yamlSB.ToString());
+				}
+
 				entry = deserializer.Deserialize<TextEntry>(yamlSB.ToString());
 
 				// Read the body
 				entry.Id = id;
-				entry.Body = ignoreBody ? "" : await sr.ReadToEndAsync();
+				entry.Body = await sr.ReadToEndAsync();
 			}
 			// No YAML, read everything to body.
 			else
 			{
-				entry = new TextEntry()
+				if (ignoreBody)
 				{
-					Id = id,
-					Title = id,
-					Body = ignoreBody ? "" : tmp + await sr.ReadToEndAsync(),
-				};
+					return new EntryMeta()
+					{
+						Id = id,
+						Title = id,
+					};
+				}
+				else
+				{
+					entry = new TextEntry()
+					{
+						Id = id,
+						Title = id,
+						Body = tmp + await sr.ReadToEndAsync(),
+					};
+				}
 			}
 
 			// Decrypt the body
-			if (entry.Encrypted && !ignoreBody)
+			if (entry.Encrypted)
 			{
-				entry.Body = await Crypto.Decrypt(entry.Body);
+				try
+				{
+					entry.Body = await Crypto.Decrypt(entry.Body);
+				}
+				catch (InvalidPasswordException)
+				{
+					throw;
+				}
 			}
 
 			return entry;
 		}
 
-		public async Task<bool> WriteAsync(StreamWriter sw, TextEntry entry)
+
+		public async Task<bool> WriteAsync(StreamWriter sw, EntryBase entry)
 		{
 			if (entry.Encrypted)
 			{
@@ -87,7 +111,7 @@ namespace LocalJournal.Services
 			var serializer = new SerializerBuilder()
 				.WithNamingConvention(CamelCaseNamingConvention.Instance)
 				.WithTypeConverter(NodaTimeConverter)
-				.WithAttributeOverride(typeof(TextEntry), nameof(entry.Body), new YamlIgnoreAttribute())
+				.WithAttributeOverride(typeof(TextEntry), nameof(TextEntry.Body), new YamlIgnoreAttribute())
 				.Build();
 
 			await sw.WriteAsync(Identifier);
@@ -96,12 +120,23 @@ namespace LocalJournal.Services
 			await sw.WriteAsync(Identifier);
 			await sw.WriteAsync("\n");
 
-			if (entry.Body != null)
+			if (entry is TextEntry textEntry && textEntry.Body != null)
 			{
-				if (entry.Encrypted)
-					await sw.WriteAsync(await Crypto.Encrypt(entry.Body.ToCrossPlatformEOL()));
+				if (textEntry.Encrypted)
+				{
+					try
+					{
+						await sw.WriteAsync(await Crypto.Encrypt(textEntry.Body.ToCrossPlatformEOL()));
+					}
+					catch (InvalidPasswordException)
+					{
+						throw;
+					}
+				}
 				else
-					await sw.WriteAsync(entry.Body.ToCrossPlatformEOL());
+				{
+					await sw.WriteAsync(textEntry.Body.ToCrossPlatformEOL());
+				}
 			}
 
 			return true;

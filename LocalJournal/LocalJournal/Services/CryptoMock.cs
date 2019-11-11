@@ -6,14 +6,14 @@ namespace LocalJournal.Services
 	{
 		public string? Key { get; private set; } = null;
 
-		public Task<string?> Decrypt(string str)
+		public Task<string> Decrypt(string str)
 		{
-			return Task.FromResult((string?)(str + "<DECRYPTED>"));
+			return Task.FromResult(str + "<DECRYPTED>");
 		}
 
-		public Task<string?> Encrypt(string str)
+		public Task<string> Encrypt(string str)
 		{
-			return Task.FromResult((string?)(str + "<ENCRYPTED>"));
+			return Task.FromResult(str + "<ENCRYPTED>");
 		}
 
 		public Task<bool> HasKey()
