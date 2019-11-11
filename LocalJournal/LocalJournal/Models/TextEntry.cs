@@ -1,26 +1,12 @@
-﻿using NodaTime;
-using System;
+﻿using System;
 
 namespace LocalJournal.Models
 {
-	public class TextEntry : IEquatable<TextEntry>
+	public class TextEntry : EntryBase, IEquatable<TextEntry>
 	{
-		/// <summary>
-		/// How is this entry known by the <see cref="IDataStore"/>?
-		/// </summary>
-		/// <remarks>Should be null when not stored in a <see cref="IDataStore"/></remarks>
-		public string? Id { get; set; }
-
-		public OffsetDateTime CreationTime { get; set; }
-		public OffsetDateTime LastModified { get; set; }
-
-		public string Title { get; set; } = "";
-
 		/// <summary></summary>
 		/// <remarks>Can be null when <see cref="IDataStore"/> is only returning meta data.</remarks>
 		public string? Body { get; set; }
-
-		public bool Encrypted { get; set; }
 
 		public bool Equals(TextEntry other)
 		{
@@ -31,6 +17,13 @@ namespace LocalJournal.Models
 				   Title == other.Title &&
 				   Body == other.Body &&
 				   Encrypted == other.Encrypted;
+		}
+
+		public override bool Equals(EntryBase other)
+		{
+			if (other is TextEntry textEntry)
+				return Equals(textEntry);
+			return false;
 		}
 	}
 }

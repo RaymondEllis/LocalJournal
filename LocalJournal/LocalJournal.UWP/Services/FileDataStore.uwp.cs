@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using Xamarin.Forms;
 #nullable enable
 
 namespace LocalJournal.Services
@@ -13,7 +14,7 @@ namespace LocalJournal.Services
 		private StorageFolder? folder;
 
 		public FileDataStore_Platform()
-			: base()
+			: base(DependencyService.Get<IDataSerializer<LocalJournal.Models.EntryBase>>())
 		{
 		}
 

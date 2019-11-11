@@ -13,36 +13,41 @@ namespace LocalJournal.ViewModels
 {
 	public class EntriesViewModel : BaseViewModel
 	{
-		protected static IDataStore<TextEntry> DataStore => DependencyService.Get<IDataStore<TextEntry>>() ?? new MockDataStore();
+		protected IDataStore<EntryBase> DataStore { get; }
 
-		public ObservableCollection<TextEntry> Entries { get; }
+		public ObservableCollection<EntryMeta> Entries { get; }
 
 		public AsyncCommand LoadEntriesCommand => new AsyncCommand(ExecuteLoadEntriesCommand);
 
-		public AsyncCommand<TextEntry> EditEntryCommand => new AsyncCommand<TextEntry>(ExecuteEditEntryCommand);
+		public AsyncCommand<EntryMeta> EditEntryCommand => new AsyncCommand<EntryMeta>(ExecuteEditEntryCommand);
 
-		public AsyncCommand<TextEntry> DeleteEntryCommand => new AsyncCommand<TextEntry>(ExecuteDeleteEntryCommand);
+		public AsyncCommand<EntryMeta> DeleteEntryCommand => new AsyncCommand<EntryMeta>(ExecuteDeleteEntryCommand);
 
-		public EntriesViewModel()
+		public EntriesViewModel(IDataStore<EntryBase>? dataStore)
 		{
 			Title = "Browse";
-			Entries = new ObservableCollection<TextEntry>();
+			Entries = new ObservableCollection<EntryMeta>();
 
-			MessagingCenter.Subscribe<EntryEditPage, TextEntry>(this, "UpdateEntry", async (obj, entry) =>
-			 {
-				 var index = EntryIndex(entry.Id);
+			DataStore = dataStore ?? new MockDataStore();
 
-				 if (index == -1)
-				 {
-					 if (await DataStore.AddEntryAsync(entry))
-						 Entries.Add(entry);
-				 }
-				 else
-				 {
-					 if (await DataStore.UpdateEntryAsync(entry))
-						 Entries[index] = entry; // Refresh list
-				 }
-			 });
+			MessagingCenter.Subscribe<EntryEditPage, EntryBase>(this, "UpdateEntry", async (obj, entry) =>
+			{
+				if (entry is EntryMeta)
+					throw new ArgumentException($"{nameof(EntryMeta)} is a invalid type to call the message \"UpdateEntry\"", nameof(entry));
+
+				var index = EntryIndex(entry.Id);
+
+				if (index == -1)
+				{
+					if (await DataStore.AddEntryAsync(entry))
+						Entries.Add(entry.AsMeta());
+				}
+				else
+				{
+					if (await DataStore.UpdateEntryAsync(entry))
+						Entries[index] = entry.AsMeta(); // Refresh list
+				}
+			});
 		}
 
 		private int EntryIndex(string? id)
@@ -70,7 +75,7 @@ namespace LocalJournal.ViewModels
 				var entries = await DataStore.GetEntriesAsync(true);
 				foreach (var entry in entries)
 				{
-					Entries.Add(entry);
+					Entries.Add(entry.AsMeta());
 				}
 			}
 			catch (Exception ex)
@@ -83,7 +88,7 @@ namespace LocalJournal.ViewModels
 			}
 		}
 
-		private async Task ExecuteEditEntryCommand(TextEntry entryMeta)
+		private async Task ExecuteEditEntryCommand(EntryMeta entryMeta)
 		{
 			bool userHasAccess = true;
 
@@ -102,20 +107,23 @@ namespace LocalJournal.ViewModels
 
 			if (userHasAccess)
 			{
-				var entry = await DataStore.GetEntryAsync(entryMeta.Id);
-
-				if (entry == null || (entry.Encrypted && entry.Body == null))
-					await Application.Current.MainPage.DisplayAlert("Unable to decrypt", "Invalid password", "OK");
-				else
+				try
+				{
+					var entry = await DataStore.GetEntryAsync(entryMeta.Id);
 					await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
+				}
+				catch (InvalidPasswordExecption)
+				{
+					await Application.Current.MainPage.DisplayAlert("Unable to decrypt", "Invalid password", "OK");
+				}
 			}
 		}
 
-		private async Task ExecuteDeleteEntryCommand(TextEntry entry)
+		private async Task ExecuteDeleteEntryCommand(EntryMeta entryMeta)
 		{
-			if (entry?.Id is null)
+			if (entryMeta?.Id is null)
 				return;
-			await DataStore.DeleteEntryAsync(entry.Id);
+			await DataStore.DeleteEntryAsync(entryMeta.Id);
 			await LoadEntriesCommand.ExecuteAsync();
 		}
 	}

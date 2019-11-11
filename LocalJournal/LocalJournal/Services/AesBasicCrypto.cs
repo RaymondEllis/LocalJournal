@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -90,9 +91,12 @@ namespace LocalJournal.Services
 			if (plainText == null || plainText.Length <= 0)
 				throw new ArgumentNullException(nameof(plainText));
 			if (key == null || key.Length <= 0)
-				throw new ArgumentNullException(nameof(key));
+				throw new ArgumentNullException(nameof(key), $"Cannot encrypt, {nameof(key)}(password) is empty.");
 			if (IV == null || IV.Length <= 0)
 				throw new ArgumentNullException(nameof(IV));
+
+			// Convert plain text into byte array.
+			var bytes = Encoding.UTF8.GetBytes(plainText);
 
 			// Create an AES object with the specified key and IV.
 			using var aesAlg = Aes.Create();
@@ -103,13 +107,21 @@ namespace LocalJournal.Services
 			// Create an encryptor to perform the stream transform.
 			var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
-			// Create the streams used for encryption.
-			using var msEncrypt = new MemoryStream();
-			using var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
-			using var swEncrypt = new StreamWriter(csEncrypt);
-			await swEncrypt.WriteAsync(plainText);
+			try
+			{
+				// Create the streams used for encryption.
+				using var ms = new MemoryStream();
+				using var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
 
-			return msEncrypt.ToArray();
+				await cs.WriteAsync(bytes, 0, bytes.Length);
+				cs.FlushFinalBlock();
+
+				return ms.ToArray();
+			}
+			catch (Exception ex)
+			{
+				throw new InvalidPasswordExecption($"Password two short or {ex.Message}", ex);
+			}
 		}
 
 		static async Task<string> DecryptStringFromBase64String_Aes(string data, byte[] key)
@@ -124,11 +136,11 @@ namespace LocalJournal.Services
 		{
 			// Check arguments.
 			if (cipherText == null || cipherText.Length <= 0)
-				throw new ArgumentNullException(nameof(cipherText));
+				throw new ArgumentNullException(nameof(cipherText), $"Cannot decrypt, missing encrypted text to decrypt. Data may be corrupt!");
 			if (key == null || key.Length <= 0)
-				throw new ArgumentNullException(nameof(key));
+				throw new ArgumentNullException(nameof(key), $"Cannot decrypt, {nameof(key)}(password) is empty.");
 			if (IV == null || IV.Length <= 0)
-				throw new ArgumentNullException(nameof(IV));
+				throw new ArgumentNullException(nameof(IV), $"Cannot decrypt, missing {nameof(IV)}. Data may be corrupt!");
 
 			// Create an AES object with the specified key and IV.
 			using var aesAlg = Aes.Create();
@@ -139,11 +151,19 @@ namespace LocalJournal.Services
 			// Create a decryptor to perform the stream transform.
 			var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-			// Create the streams used for decryption.
-			using var msDecrypt = new MemoryStream(cipherText);
-			using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
-			using var srDecrypt = new StreamReader(csDecrypt);
-			return await srDecrypt.ReadToEndAsync();
+			try
+			{
+				// Create the streams used for decryption.
+				using var mc = new MemoryStream(cipherText);
+				using var cs = new CryptoStream(mc, decryptor, CryptoStreamMode.Read);
+				using var sr = new StreamReader(cs);
+
+				return await sr.ReadToEndAsync();
+			}
+			catch (Exception ex)
+			{
+				throw new InvalidPasswordExecption($"Password invalid or {ex.Message}", ex);
+			}
 		}
 	}
 }
