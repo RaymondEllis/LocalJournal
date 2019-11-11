@@ -26,15 +26,15 @@ namespace LocalJournal.Services
 		Task<string> Decrypt(string str);
 	}
 
-	public class InvalidPasswordExecption : Exception
+	public class InvalidPasswordException : Exception
 	{
-		public InvalidPasswordExecption()
+		public InvalidPasswordException()
 		{
 		}
-		public InvalidPasswordExecption(string message) : base(message)
+		public InvalidPasswordException(string message) : base(message)
 		{
 		}
-		public InvalidPasswordExecption(string message, Exception innerException) : base(message, innerException)
+		public InvalidPasswordException(string message, Exception innerException) : base(message, innerException)
 		{
 		}
 	}

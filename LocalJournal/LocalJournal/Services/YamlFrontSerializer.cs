@@ -90,7 +90,7 @@ namespace LocalJournal.Services
 				{
 					entry.Body = await Crypto.Decrypt(entry.Body);
 				}
-				catch (InvalidPasswordExecption)
+				catch (InvalidPasswordException)
 				{
 					throw;
 				}
@@ -128,7 +128,7 @@ namespace LocalJournal.Services
 					{
 						await sw.WriteAsync(await Crypto.Encrypt(textEntry.Body.ToCrossPlatformEOL()));
 					}
-					catch (InvalidPasswordExecption)
+					catch (InvalidPasswordException)
 					{
 						throw;
 					}

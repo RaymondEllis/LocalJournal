@@ -68,7 +68,7 @@ namespace LocalJournal.Services.Tests
 
 			crypto = new AesBasicCrypto_StorageOverride(decryptPassword);
 
-			await Assert.ThrowsAsync<InvalidPasswordExecption>(async () => await crypto.Decrypt(encrypted!));
+			await Assert.ThrowsAsync<InvalidPasswordException>(async () => await crypto.Decrypt(encrypted!));
 		}
 
 		[Fact]
@@ -76,14 +76,14 @@ namespace LocalJournal.Services.Tests
 		{
 			var crypto = new AesBasicCrypto_StorageOverride((byte[]?)null);
 
-			await Assert.ThrowsAsync<InvalidPasswordExecption>(async () => await crypto.Encrypt("abc"));
+			await Assert.ThrowsAsync<InvalidPasswordException>(async () => await crypto.Encrypt("abc"));
 		}
 		[Fact]
 		public async void Encrypt_With_Empty_Password_Throws_InvalidPasswordException()
 		{
 			var crypto = new AesBasicCrypto_StorageOverride(Array.Empty<byte>());
 
-			await Assert.ThrowsAsync<InvalidPasswordExecption>(async () => await crypto.Encrypt("abc"));
+			await Assert.ThrowsAsync<InvalidPasswordException>(async () => await crypto.Encrypt("abc"));
 		}
 
 		class AesBasicCrypto_StorageOverride : AesBasicCrypto

@@ -112,7 +112,7 @@ namespace LocalJournal.ViewModels
 					var entry = await DataStore.GetEntryAsync(entryMeta.Id);
 					await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
 				}
-				catch (InvalidPasswordExecption)
+				catch (InvalidPasswordException)
 				{
 					await Application.Current.MainPage.DisplayAlert("Unable to decrypt", "Invalid password", "OK");
 				}

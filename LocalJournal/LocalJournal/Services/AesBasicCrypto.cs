@@ -17,7 +17,7 @@ namespace LocalJournal.Services
 
 			var key = await GetKey();
 			if (key is null || key.Length <= 0)
-				throw new InvalidPasswordExecption($"Cannot decrypt, key / password is empty.");
+				throw new InvalidPasswordException($"Cannot decrypt, key / password is empty.");
 
 			try
 			{
@@ -36,7 +36,7 @@ namespace LocalJournal.Services
 
 			var key = await GetKey();
 			if (key is null || key.Length <= 0)
-				throw new InvalidPasswordExecption($"Cannot encrypt, key / password is empty.");
+				throw new InvalidPasswordException($"Cannot encrypt, key / password is empty.");
 
 			using var aes = Aes.Create();
 			aes.Key = key;
@@ -88,7 +88,7 @@ namespace LocalJournal.Services
 			if (plainText.Length <= 0)
 				throw new ArgumentNullException(nameof(plainText));
 			if (key.Length <= 0)
-				throw new InvalidPasswordExecption($"Cannot encrypt, key / password is empty.");
+				throw new InvalidPasswordException($"Cannot encrypt, key / password is empty.");
 			if (IV.Length <= 0)
 				throw new ArgumentNullException(nameof(IV));
 
@@ -128,7 +128,7 @@ namespace LocalJournal.Services
 			if (cipherText.Length <= 0)
 				throw new ArgumentNullException(nameof(cipherText), $"Cannot decrypt, missing encrypted text to decrypt. Data may be corrupt!");
 			if (key.Length <= 0)
-				throw new InvalidPasswordExecption($"Cannot decrypt, key / password is empty.");
+				throw new InvalidPasswordException($"Cannot decrypt, key / password is empty.");
 			if (IV.Length <= 0)
 				throw new ArgumentNullException(nameof(IV), $"Cannot decrypt, missing {nameof(IV)}. Data may be corrupt!");
 
@@ -152,7 +152,7 @@ namespace LocalJournal.Services
 			}
 			catch (Exception ex)
 			{
-				throw new InvalidPasswordExecption($"Password invalid or {ex.Message}", ex);
+				throw new InvalidPasswordException($"Password invalid or {ex.Message}", ex);
 			}
 		}
 	}
