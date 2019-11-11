@@ -18,12 +18,12 @@ namespace LocalJournal.Services
 		/// <summary>
 		/// Encrypt string with stored key.
 		/// </summary>
-		Task<string?> Encrypt(string str);
+		Task<string> Encrypt(string str);
 
 		/// <summary>
 		/// Decrypt string with stored key.
 		/// </summary>
-		Task<string?> Decrypt(string str);
+		Task<string> Decrypt(string str);
 	}
 
 	public class InvalidPasswordExecption : Exception
