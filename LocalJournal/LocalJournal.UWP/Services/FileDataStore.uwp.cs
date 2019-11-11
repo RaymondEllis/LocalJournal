@@ -68,15 +68,12 @@ namespace LocalJournal.Services
 
 		protected override async Task<Stream?> GetStreamAsync(string id, FileAccess access)
 		{
-			switch (access)
+			return access switch
 			{
-				case FileAccess.Read:
-					return await folder.OpenStreamForReadAsync(FileFromId(id));
-				case FileAccess.Write:
-					return await folder.OpenStreamForWriteAsync(FileFromId(id), CreationCollisionOption.ReplaceExisting);
-				default:
-					return null;
-			}
+				FileAccess.Read => await folder.OpenStreamForReadAsync(FileFromId(id)),
+				FileAccess.Write => await folder.OpenStreamForWriteAsync(FileFromId(id), CreationCollisionOption.ReplaceExisting),
+				_ => null,
+			};
 		}
 
 		protected override async Task<bool> FileExists(string id)
