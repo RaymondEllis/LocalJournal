@@ -1,6 +1,5 @@
 ﻿using NodaTime;
 using System;
-using System.Collections.Generic;
 
 namespace LocalJournal.Models
 {
@@ -40,9 +39,10 @@ namespace LocalJournal.Models
 		public virtual bool Equals(EntryBase other)
 		{
 			return Id == other.Id &&
-				   CreationTime.Equals(other.CreationTime) &&
-				   LastModified.Equals(other.LastModified) &&
-				   Title == other.Title;
+				CreationTime.Equals(other.CreationTime) &&
+				LastModified.Equals(other.LastModified) &&
+				Title == other.Title &&
+				Encrypted == other.Encrypted;
 		}
 	}
 

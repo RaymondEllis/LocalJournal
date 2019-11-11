@@ -11,12 +11,8 @@ namespace LocalJournal.Models
 		public bool Equals(TextEntry other)
 		{
 			return other != null &&
-				   Id == other.Id &&
-				   CreationTime.Equals(other.CreationTime) &&
-				   LastModified.Equals(other.LastModified) &&
-				   Title == other.Title &&
-				   Body == other.Body &&
-				   Encrypted == other.Encrypted;
+				base.Equals(other) &&
+				Body == other.Body;
 		}
 
 		public override bool Equals(EntryBase other)
