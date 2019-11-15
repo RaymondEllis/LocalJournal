@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="LocalJournal.Views.EntryTypes.TextEntryView">
+
+    <ContentView.Content>
+        <StackLayout Spacing="20" Padding="15">
+            <Entry Text="{Binding Entry.Title}" Placeholder="Title" d:Text="Title" FontSize="Small"
+                       Keyboard="Chat"/>
+
+            <StackLayout Orientation="Horizontal" Spacing="10">
+                <Label Text="Encrypt" VerticalOptions="Center" />
+                <Switch x:Name="Encrypted" x:FieldModifier="public" />
+            </StackLayout>
+
+            <Editor Text="{Binding Entry.Body}" Placeholder="Body" d:Text="Entry body" FontSize="Small" Margin="0"
+                        Keyboard="Chat" AutoSize="TextChanges"/>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

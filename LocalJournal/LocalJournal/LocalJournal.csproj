@@ -35,10 +35,16 @@
     <Compile Update="Views\EntryEditPage.xaml.cs">
       <DependentUpon>EntryEditPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\EntryTypes\TextEntryView.xaml.cs">
+      <DependentUpon>TextEntryView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Views\CryptoSetupPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\EntryTypes\TextEntryView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

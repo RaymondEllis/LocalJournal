@@ -29,9 +29,17 @@ namespace LocalJournal.Views
 					$"Currently only TextEntry is supported in the EntryEditPage, but was passed {entry?.GetType().Name}");
 
 
-			Encrypted.IsToggled = Entry.Encrypted;
+			EntryEditView.Encrypted.Toggled += Encrypted_Toggled;
+			EntryEditView.Encrypted.IsToggled = Entry.Encrypted;
 
 			MessagingCenter.Subscribe<App>(this, "OnResume", OnResume);
+		}
+
+		protected EntryEditPage(EntryEditViewModel viewModel)
+		{
+			InitializeComponent();
+
+			this.viewModel = viewModel;
 		}
 
 		protected async void OnResume(App sender)
@@ -88,7 +96,7 @@ namespace LocalJournal.Views
 					Entry.Encrypted = false;
 				}
 			}
-			Encrypted.IsToggled = Entry.Encrypted;
+			EntryEditView.Encrypted.IsToggled = Entry.Encrypted;
 		}
 	}
 }
