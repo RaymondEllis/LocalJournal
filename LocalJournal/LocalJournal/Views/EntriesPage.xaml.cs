@@ -68,5 +68,15 @@ namespace LocalJournal.Views
 		{
 			await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));
 		}
+
+		void AddFromTemplate_Clicked(object sender, EventArgs e)
+		{
+
+		}
+
+		async void NewTemplate_Clicked(object sender, EventArgs e)
+		{
+			await Navigation.PushModalAsync(new NavigationPage(new TemplateEditPage()));
+		}
 	}
 }
