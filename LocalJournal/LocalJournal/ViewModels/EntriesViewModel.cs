@@ -121,9 +121,7 @@ namespace LocalJournal.ViewModels
 
 		private async Task ExecuteDeleteEntryCommand(EntryMeta entryMeta)
 		{
-			if (entryMeta?.Id is null)
-				return;
-			await DataStore.DeleteEntryAsync(entryMeta.Id);
+			await DataStore.DeleteEntryAsync(entryMeta);
 			await LoadEntriesCommand.ExecuteAsync();
 		}
 	}

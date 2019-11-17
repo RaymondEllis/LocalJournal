@@ -45,9 +45,9 @@ namespace LocalJournal.Services
 			return await Task.FromResult(true);
 		}
 
-		public async Task<bool> DeleteEntryAsync(string id)
+		public async Task<bool> DeleteEntryAsync(EntryBase entry)
 		{
-			var oldEntry = entries.Where((EntryBase arg) => arg.Id == id).FirstOrDefault();
+			var oldEntry = entries.Where((EntryBase arg) => arg.Id == entry.Id).FirstOrDefault();
 			entries.Remove(oldEntry);
 
 			return await Task.FromResult(true);

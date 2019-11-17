@@ -52,12 +52,12 @@ namespace LocalJournal.Services
 			return await dataSerializer.WriteAsync(sw, entry);
 		}
 
-		public virtual async Task<bool> DeleteEntryAsync(string id)
+		public virtual async Task<bool> DeleteEntryAsync(T entry)
 		{
-			if (!await Folder.CheckPermission())
+			if (entry.Id is null || !await Folder.CheckPermission())
 				return false;
 
-			await Folder.DeleteFile(id);
+			await Folder.DeleteFile(entry.Id);
 
 			return true;
 		}

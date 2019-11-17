@@ -7,7 +7,7 @@ namespace LocalJournal.Services
 	{
 		Task<bool> AddEntryAsync(T entry);
 		Task<bool> UpdateEntryAsync(T entry);
-		Task<bool> DeleteEntryAsync(string id);
+		Task<bool> DeleteEntryAsync(T entry);
 		Task<T?> GetEntryAsync(string id, bool ignoreBody = false);
 		Task<IEnumerable<T>> GetEntriesAsync(bool forceRefresh = false);
 	}

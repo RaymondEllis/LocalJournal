@@ -62,7 +62,7 @@ namespace LocalJournal.ViewModels
 
 		private async Task ExecuteDeleteCommand(Template item)
 		{
-			await DataStore.DeleteEntryAsync(item.Id);
+			await DataStore.DeleteEntryAsync(item);
 		}
 
 	}
