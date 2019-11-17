@@ -5,10 +5,10 @@ namespace LocalJournal.Services
 {
 	public interface IDataStore<T> where T : class
 	{
-		Task<bool> AddEntryAsync(T entry);
-		Task<bool> UpdateEntryAsync(T entry);
-		Task<bool> DeleteEntryAsync(T entry);
-		Task<T?> GetEntryAsync(string id, bool ignoreBody = false);
-		Task<IEnumerable<T>> GetEntriesAsync(bool forceRefresh = false);
+		Task<bool> AddAsync(T item);
+		Task<bool> UpdateAsync(T item);
+		Task<bool> DeleteAsync(T item);
+		Task<T?> GetAsync(string id, bool ignoreBody = false);
+		Task<IEnumerable<T>> GetAllAsync(bool forceRefresh = false);
 	}
 }

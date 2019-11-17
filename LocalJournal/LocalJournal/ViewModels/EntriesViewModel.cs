@@ -39,12 +39,12 @@ namespace LocalJournal.ViewModels
 
 				if (index == -1)
 				{
-					if (await DataStore.AddEntryAsync(entry))
+					if (await DataStore.AddAsync(entry))
 						Entries.Add(entry.AsMeta());
 				}
 				else
 				{
-					if (await DataStore.UpdateEntryAsync(entry))
+					if (await DataStore.UpdateAsync(entry))
 						Entries[index] = entry.AsMeta(); // Refresh list
 				}
 			});
@@ -72,7 +72,7 @@ namespace LocalJournal.ViewModels
 			try
 			{
 				Entries.Clear();
-				var entries = await DataStore.GetEntriesAsync(true);
+				var entries = await DataStore.GetAllAsync(true);
 				foreach (var entry in entries)
 				{
 					Entries.Add(entry.AsMeta());
@@ -109,7 +109,7 @@ namespace LocalJournal.ViewModels
 			{
 				try
 				{
-					var entry = await DataStore.GetEntryAsync(entryMeta.Id);
+					var entry = await DataStore.GetAsync(entryMeta.Id);
 					await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(entry)));
 				}
 				catch (InvalidPasswordException)
@@ -121,7 +121,7 @@ namespace LocalJournal.ViewModels
 
 		private async Task ExecuteDeleteEntryCommand(EntryMeta entryMeta)
 		{
-			await DataStore.DeleteEntryAsync(entryMeta);
+			await DataStore.DeleteAsync(entryMeta);
 			await LoadEntriesCommand.ExecuteAsync();
 		}
 	}
