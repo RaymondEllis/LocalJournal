@@ -12,21 +12,17 @@ namespace LocalJournal.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TemplateEditPage : ContentPage
 	{
-		TemplateViewModel ViewModel { get; }
+		TemplateEditViewModel ViewModel { get; }
 
-		public TemplateEditPage()
+		public TemplateEditPage(Template? template)
 		{
 			InitializeComponent();
-
-
-			Type initialType = typeof(TextEntry);
-
 
 			var types = ServiceLocatorByType<EntryBase>.GetNames();
 			foreach (var t in types)
 				TypePicker.Items.Add(t);
 
-			BindingContext = ViewModel = new TemplateViewModel(initialType);
+			BindingContext = ViewModel = new TemplateEditViewModel(template);
 		}
 
 		private void TypePicker_SelectedIndexChanged(object sender, EventArgs e)
@@ -54,7 +50,7 @@ namespace LocalJournal.Views
 
 		private void Save_Clicked(object sender, EventArgs e)
 		{
-
+			MessagingCenter.Send(this, "Update", ViewModel.Template);
 		}
 
 		private async void Cancel_Clicked(object sender, EventArgs e)

@@ -11,7 +11,6 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Setup Encryption" Clicked="SetupCryptro_Clicked" />
         <ToolbarItem Text="Add" Clicked="AddEntry_Clicked" />
-        <ToolbarItem Text="New Template" Clicked="NewTemplate_Clicked" />
         <ToolbarItem Text="From Template" Clicked="AddFromTemplate_Clicked" />
     </ContentPage.ToolbarItems>
 
