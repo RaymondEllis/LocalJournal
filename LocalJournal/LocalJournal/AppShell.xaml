@@ -16,7 +16,7 @@
                       ContentTemplate="{DataTemplate views:AboutPage}">
         </ShellContent>
         <Tab Title="+" >
-            <!-- ToDo: Open new entry view. -->
+            <views:TemplatesPage />
         </Tab>
     </TabBar>
 </Shell>
