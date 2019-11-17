@@ -5,6 +5,10 @@ using System.Reflection;
 
 namespace LocalJournal.Services
 {
+	/// <summary>
+	/// Uses reflection to cache all types that <see cref="T.IsAssignableFrom"/>.
+	/// The cache is then used later to create or get types from the full type name.
+	/// </summary>
 	public static class ServiceLocatorByType<T> where T : class
 	{
 		private static Dictionary<string, Type>? Cache;
@@ -21,6 +25,9 @@ namespace LocalJournal.Services
 			return result;
 		}
 
+		/// <summary>
+		/// Gets a new list of all the full names for type <typeparamref name="T"/>.
+		/// </summary>
 		public static IList<string> GetNames()
 		{
 			if (Cache is null)
@@ -29,6 +36,9 @@ namespace LocalJournal.Services
 			return Cache.Keys.ToList();
 		}
 
+		/// <summary>
+		/// Tries to get type of <paramref name="fullName"/>.
+		/// </summary>
 		public static bool TryGetType(string fullName, out Type result)
 		{
 			if (Cache is null)
@@ -37,14 +47,16 @@ namespace LocalJournal.Services
 			return Cache.TryGetValue(fullName, out result);
 		}
 
-		public static bool TryGet(string fullName, out T? result)
+		/// <summary>
+		/// Tries to create instance of the type from <paramref name="fullName"/> and casts to type of <typeparamref name="T"/>.
+		/// </summary>
+		public static bool TryCreate(string fullName, out T? result)
 		{
-			if (Cache is null)
-				Cache = BuildCache();
-
-			result = null;
-			if (Cache.TryGetValue(fullName, out Type type))
+			if (TryGetType(fullName, out var type))
 				result = Activator.CreateInstance(type) as T;
+			else
+				result = null;
+
 			return result != null;
 		}
 	}
