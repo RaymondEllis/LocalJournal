@@ -10,13 +10,14 @@ namespace LocalJournal.Services
 	public class FileDataStore_EntryBase : FileDataStore<EntryBase>
 	{
 		public FileDataStore_EntryBase()
-			: base(DependencyService.Get<IFileSystem>(), DependencyService.Get<IDataSerializer<EntryBase>>())
+			: base(new FolderQuery(DependencyService.Get<IFileSystem>(), null, ".md"),
+				  DependencyService.Get<IDataSerializer<EntryBase>>())
 		{
 		}
 
 		protected override async Task AssignUniqueId(EntryBase item)
 		{
-			item.Id =await VerifyUniqueId(item.CreationTime.ToIdString());
+			item.Id = await VerifyUniqueId(item.CreationTime.ToIdString());
 		}
 
 		protected override IOrderedEnumerable<EntryBase> Order(List<EntryBase> items)

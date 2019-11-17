@@ -7,14 +7,12 @@ namespace LocalJournal.Services
 	{
 		Task<bool> CheckPermission();
 
-		string FileFromId(string id);
+		Task<bool> FileExists(FolderQuery query, string filename);
 
-		Task<bool> FileExists(string id);
+		Task DeleteFile(FolderQuery query, string filename);
 
-		Task DeleteFile(string filename);
+		Task<string[]> GetFiles(FolderQuery query);
 
-		Task<string[]> GetFiles();
-
-		Task<Stream?> GetStreamAsync(string id, FileAccess access);
+		Task<Stream?> GetStreamAsync(FolderQuery query, string filename, FileAccess access);
 	}
 }

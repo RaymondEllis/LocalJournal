@@ -11,17 +11,17 @@ namespace LocalJournal.Services
 		where T : class, IItem
 	{
 		protected readonly IDataSerializer<T> dataSerializer;
-		IFileSystem FileSystem { get; }
+		FolderQuery Folder { get; }
 
-		protected FileDataStore(IFileSystem fileSystem, IDataSerializer<T> dataSerializer)
+		protected FileDataStore(FolderQuery folder, IDataSerializer<T> dataSerializer)
 		{
-			FileSystem = fileSystem;
+			Folder = folder;
 			this.dataSerializer = dataSerializer;
 		}
 
 		public async Task<bool> AddEntryAsync(T entry)
 		{
-			if (!await FileSystem.CheckPermission())
+			if (!await Folder.CheckPermission())
 				return false;
 
 			if (entry.Id != null)
@@ -29,7 +29,7 @@ namespace LocalJournal.Services
 
 			await AssignUniqueId(entry);
 
-			using var stream = await FileSystem.GetStreamAsync(entry.Id, FileAccess.Write);
+			using var stream = await Folder.GetStreamAsync(entry.Id!, FileAccess.Write);
 			if (stream == null)
 				return false;
 			using var sw = new StreamWriter(stream);
@@ -38,14 +38,14 @@ namespace LocalJournal.Services
 
 		public async Task<bool> UpdateEntryAsync(T entry)
 		{
-			if (!await FileSystem.CheckPermission())
+			if (!await Folder.CheckPermission())
 				return false;
 
 			if (entry.Id == null)
 				throw new ArgumentException($"Expected a 'Id' for updating a entry, but got a null 'Id'!", nameof(entry));
 
 
-			using var stream = await FileSystem.GetStreamAsync(entry.Id, FileAccess.Write);
+			using var stream = await Folder.GetStreamAsync(entry.Id, FileAccess.Write);
 			if (stream == null)
 				return false;
 			using var sw = new StreamWriter(stream);
@@ -54,20 +54,20 @@ namespace LocalJournal.Services
 
 		public virtual async Task<bool> DeleteEntryAsync(string id)
 		{
-			if (!await FileSystem.CheckPermission())
+			if (!await Folder.CheckPermission())
 				return false;
 
-			await FileSystem.DeleteFile(FileSystem.FileFromId(id));
+			await Folder.DeleteFile(id);
 
 			return true;
 		}
 
 		public async Task<T?> GetEntryAsync(string id, bool ignoreBody = false)
 		{
-			if (!await FileSystem.CheckPermission())
+			if (!await Folder.CheckPermission())
 				return null;
 
-			using var stream = await FileSystem.GetStreamAsync(id, FileAccess.Read);
+			using var stream = await Folder.GetStreamAsync(id, FileAccess.Read);
 			if (stream == null)
 				return null;
 			using var sr = new StreamReader(stream);
@@ -76,10 +76,10 @@ namespace LocalJournal.Services
 
 		public async Task<IEnumerable<T>> GetEntriesAsync(bool forceRefresh = false)
 		{
-			if (!await FileSystem.CheckPermission())
+			if (!await Folder.CheckPermission())
 				return new List<T>(0);
 
-			var files = await FileSystem.GetFiles();
+			var files = await Folder.GetFiles();
 			var entries = new List<T>(files.Length);
 			foreach (var file in files)
 			{
@@ -96,7 +96,7 @@ namespace LocalJournal.Services
 			string id = requestedId;
 
 			int i = 0;
-			while (await FileSystem.FileExists(id))
+			while (await Folder.FileExists(id))
 			{
 				id = $"{requestedId}_{++i}";
 			}

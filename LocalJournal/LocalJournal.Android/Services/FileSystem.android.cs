@@ -17,6 +17,14 @@ namespace LocalJournal.Services
 			Directory.CreateDirectory(DataPath);
 		}
 
+		private string FullFileName(FolderQuery query, string filename)
+		{
+			if (string.IsNullOrEmpty(query.SubFolder))
+				return Path.Combine(DataPath, filename);
+			else
+				return Path.Combine(DataPath, Path.Combine(query.SubFolder, filename));
+		}
+
 		public async Task<bool> CheckPermission()
 		{
 			try
@@ -34,31 +42,30 @@ namespace LocalJournal.Services
 			}
 		}
 
-		public string FileFromId(string id)
+		public Task DeleteFile(FolderQuery query, string filename)
 		{
-			return Path.Combine(DataPath, $"{id}.md");
-		}
-		public Task DeleteFile(string filename)
-		{
-			return Task.Run(() => File.Delete(filename));
+			return Task.Run(() => File.Delete(FullFileName(query, filename)));
 		}
 
-		public Task<string[]> GetFiles()
+		public Task<string[]> GetFiles(FolderQuery query)
 		{
-			return Task.FromResult(Directory.GetFiles(DataPath, "*.md"));
+			if (string.IsNullOrEmpty(query.SubFolder))
+				return Task.FromResult(Directory.GetFiles(DataPath, $"*{query.Extension}", SearchOption.TopDirectoryOnly));
+			else
+				return Task.FromResult(Directory.GetFiles(Path.Combine(query.SubFolder!, DataPath), $"*{query.Extension}", SearchOption.TopDirectoryOnly));
 		}
 
-		public Task<Stream?> GetStreamAsync(string id, FileAccess access)
+		public Task<Stream?> GetStreamAsync(FolderQuery query, string filename, FileAccess access)
 		{
 			if (access == FileAccess.Read)
-				return Task.FromResult((Stream?)new FileStream(FileFromId(id), FileMode.Open, access));
+				return Task.FromResult((Stream?)new FileStream(FullFileName(query, filename), FileMode.Open, access));
 			else
-				return Task.FromResult((Stream?)new FileStream(FileFromId(id), FileMode.Create, access));
+				return Task.FromResult((Stream?)new FileStream(FullFileName(query, filename), FileMode.Create, access));
 		}
 
-		public Task<bool> FileExists(string id)
+		public Task<bool> FileExists(FolderQuery query, string filename)
 		{
-			return Task.FromResult(File.Exists(FileFromId(id)));
+			return Task.FromResult(File.Exists(FullFileName(query, filename)));
 		}
 	}
 }
