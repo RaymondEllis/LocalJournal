@@ -3,23 +3,21 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System.IO;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 #nullable enable
 
 namespace LocalJournal.Services
 {
-	public class FileDataStorePlatform : FileDataStore
+	public class FileSystem_Platform : IFileSystem
 	{
 		public string DataPath { get; protected set; }
 
-		public FileDataStorePlatform()
-			: base(DependencyService.Get<IDataSerializer<LocalJournal.Models.EntryBase>>())
+		public FileSystem_Platform()
 		{
 			DataPath = Path.Combine(Environment.ExternalStorageDirectory.AbsolutePath, "journal");
 			Directory.CreateDirectory(DataPath);
 		}
 
-		protected override async Task<bool> CheckPermission()
+		public async Task<bool> CheckPermission()
 		{
 			try
 			{
@@ -36,21 +34,21 @@ namespace LocalJournal.Services
 			}
 		}
 
-		protected override string FileFromId(string id)
+		public string FileFromId(string id)
 		{
 			return Path.Combine(DataPath, $"{id}.md");
 		}
-		protected override Task DeleteFile(string filename)
+		public Task DeleteFile(string filename)
 		{
 			return Task.Run(() => File.Delete(filename));
 		}
 
-		protected override Task<string[]> GetFiles()
+		public Task<string[]> GetFiles()
 		{
 			return Task.FromResult(Directory.GetFiles(DataPath, "*.md"));
 		}
 
-		protected override Task<Stream?> GetStreamAsync(string id, FileAccess access)
+		public Task<Stream?> GetStreamAsync(string id, FileAccess access)
 		{
 			if (access == FileAccess.Read)
 				return Task.FromResult((Stream?)new FileStream(FileFromId(id), FileMode.Open, access));
@@ -58,7 +56,7 @@ namespace LocalJournal.Services
 				return Task.FromResult((Stream?)new FileStream(FileFromId(id), FileMode.Create, access));
 		}
 
-		protected override Task<bool> FileExists(string id)
+		public Task<bool> FileExists(string id)
 		{
 			return Task.FromResult(File.Exists(FileFromId(id)));
 		}

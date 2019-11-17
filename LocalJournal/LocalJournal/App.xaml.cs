@@ -14,6 +14,7 @@ namespace LocalJournal
 			InitializeComponent();
 
 			//DependencyService.Register<RawSerializer>();
+			DependencyService.Register<FileDataStore_EntryBase>();
 			DependencyService.Register<YamlFrontSerializer>();
 			DependencyService.Register<AesBasicCrypto>();
 			DependencyService.Register<LockBiometricPin>();

@@ -1,5 +1,4 @@
-﻿using LocalJournal.Models;
-using NodaTime;
+﻿using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,43 +7,45 @@ using System.Threading.Tasks;
 
 namespace LocalJournal.Services
 {
-	public abstract class FileDataStore : IDataStore<EntryBase>
+	public abstract class FileDataStore<T> : IDataStore<T>
+		where T : class, IItem
 	{
-		protected readonly IDataSerializer<EntryBase> dataSerializer;
+		protected readonly IDataSerializer<T> dataSerializer;
+		IFileSystem FileSystem { get; }
 
-		protected FileDataStore(IDataSerializer<EntryBase> dataSerializer)
+		protected FileDataStore(IFileSystem fileSystem, IDataSerializer<T> dataSerializer)
 		{
+			FileSystem = fileSystem;
 			this.dataSerializer = dataSerializer;
 		}
 
-		public async Task<bool> AddEntryAsync(EntryBase entry)
+		public async Task<bool> AddEntryAsync(T entry)
 		{
-			if (!await CheckPermission())
+			if (!await FileSystem.CheckPermission())
 				return false;
 
 			if (entry.Id != null)
 				throw new ArgumentException($"Expected a null 'Id' for a new entry, but got Id of '{entry.Id}!", nameof(entry));
 
-			entry.Id = await CreateUniqueID(entry.CreationTime.ToIdString());
+			await AssignUniqueId(entry);
 
-			using var stream = await GetStreamAsync(entry.Id, FileAccess.Write);
+			using var stream = await FileSystem.GetStreamAsync(entry.Id, FileAccess.Write);
 			if (stream == null)
 				return false;
 			using var sw = new StreamWriter(stream);
 			return await dataSerializer.WriteAsync(sw, entry);
 		}
 
-		public async Task<bool> UpdateEntryAsync(EntryBase entry)
+		public async Task<bool> UpdateEntryAsync(T entry)
 		{
-			if (!await CheckPermission())
+			if (!await FileSystem.CheckPermission())
 				return false;
 
 			if (entry.Id == null)
 				throw new ArgumentException($"Expected a 'Id' for updating a entry, but got a null 'Id'!", nameof(entry));
 
-			entry.LastModified = MyDate.Now();
 
-			using var stream = await GetStreamAsync(entry.Id, FileAccess.Write);
+			using var stream = await FileSystem.GetStreamAsync(entry.Id, FileAccess.Write);
 			if (stream == null)
 				return false;
 			using var sw = new StreamWriter(stream);
@@ -53,64 +54,58 @@ namespace LocalJournal.Services
 
 		public virtual async Task<bool> DeleteEntryAsync(string id)
 		{
-			if (!await CheckPermission())
+			if (!await FileSystem.CheckPermission())
 				return false;
 
-			await DeleteFile(FileFromId(id));
+			await FileSystem.DeleteFile(FileSystem.FileFromId(id));
 
 			return true;
 		}
 
-		public async Task<EntryBase?> GetEntryAsync(string id, bool ignoreBody = false)
+		public async Task<T?> GetEntryAsync(string id, bool ignoreBody = false)
 		{
-			if (!await CheckPermission())
+			if (!await FileSystem.CheckPermission())
 				return null;
 
-			using var stream = await GetStreamAsync(id, FileAccess.Read);
+			using var stream = await FileSystem.GetStreamAsync(id, FileAccess.Read);
 			if (stream == null)
 				return null;
 			using var sr = new StreamReader(stream);
 			return await dataSerializer.ReadAsync(sr, id, ignoreBody);
 		}
 
-		public async Task<IEnumerable<EntryBase>> GetEntriesAsync(bool forceRefresh = false)
+		public async Task<IEnumerable<T>> GetEntriesAsync(bool forceRefresh = false)
 		{
-			if (!await CheckPermission())
-				return new List<EntryBase>(0);
+			if (!await FileSystem.CheckPermission())
+				return new List<T>(0);
 
-			var files = await GetFiles();
-			var entries = new List<EntryBase>(files.Length);
+			var files = await FileSystem.GetFiles();
+			var entries = new List<T>(files.Length);
 			foreach (var file in files)
 			{
 				var entry = await GetEntryAsync(Path.GetFileNameWithoutExtension(file), true);
 				if (entry != null)
 					entries.Add(entry);
 			}
-			return entries.OrderByDescending(e => e.CreationTime, OffsetDateTime.Comparer.Instant);
+			return Order(entries);
 		}
 
-		protected async Task<string> CreateUniqueID(string requestedId)
+		protected abstract Task AssignUniqueId(T item);
+		protected async Task<string> VerifyUniqueId(string requestedId)
 		{
 			string id = requestedId;
 
 			int i = 0;
-			while (await FileExists(id))
+			while (await FileSystem.FileExists(id))
 			{
 				id = $"{requestedId}_{++i}";
 			}
 			return id;
 		}
 
-		protected abstract Task<bool> CheckPermission();
+		protected virtual void OnUpdated(T item)
+		{ }
 
-		protected abstract string FileFromId(string id);
-
-		protected abstract Task<bool> FileExists(string id);
-
-		protected abstract Task DeleteFile(string filename);
-
-		protected abstract Task<string[]> GetFiles();
-
-		protected abstract Task<Stream?> GetStreamAsync(string id, FileAccess access);
+		protected abstract IOrderedEnumerable<T> Order(List<T> items);
 	}
 }

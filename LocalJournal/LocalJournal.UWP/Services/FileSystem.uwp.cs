@@ -4,21 +4,15 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-using Xamarin.Forms;
 #nullable enable
 
 namespace LocalJournal.Services
 {
-	public class FileDataStore_Platform : FileDataStore
+	public class FileSystem_Platform : IFileSystem
 	{
 		private StorageFolder? folder;
 
-		public FileDataStore_Platform()
-			: base(DependencyService.Get<IDataSerializer<LocalJournal.Models.EntryBase>>())
-		{
-		}
-
-		protected override async Task<bool> CheckPermission()
+		public async Task<bool> CheckPermission()
 		{
 			// check if we already have access to the folder.
 			if (folder != null)
@@ -46,18 +40,18 @@ namespace LocalJournal.Services
 			return false;
 		}
 
-		protected override string FileFromId(string id)
+		public string FileFromId(string id)
 		{
 			return $"{id}.md";
 		}
 
-		protected override async Task DeleteFile(string filename)
+		public async Task DeleteFile(string filename)
 		{
 			var file = await folder!.GetFileAsync(filename);
 			await file.DeleteAsync();
 		}
 
-		protected override async Task<string[]> GetFiles()
+		public async Task<string[]> GetFiles()
 		{
 			var files = await folder!.GetFilesAsync();
 			var result = new string[files.Count];
@@ -66,7 +60,7 @@ namespace LocalJournal.Services
 			return result;
 		}
 
-		protected override async Task<Stream?> GetStreamAsync(string id, FileAccess access)
+		public async Task<Stream?> GetStreamAsync(string id, FileAccess access)
 		{
 			return access switch
 			{
@@ -76,7 +70,7 @@ namespace LocalJournal.Services
 			};
 		}
 
-		protected override async Task<bool> FileExists(string id)
+		public async Task<bool> FileExists(string id)
 		{
 			try
 			{
