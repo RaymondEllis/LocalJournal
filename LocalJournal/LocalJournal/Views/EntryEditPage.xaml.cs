@@ -16,14 +16,14 @@ namespace LocalJournal.Views
 
 		TextEntry Entry => viewModel.Entry;
 
-		public EntryEditPage(EntryBase? entry)
+		public EntryEditPage(EntryBase? entry, bool fromTemplate = false)
 		{
 			InitializeComponent();
 
 			if (entry is TextEntry textEntry)
-				BindingContext = viewModel = new EntryEditViewModel(textEntry);
+				BindingContext = viewModel = new EntryEditViewModel(textEntry, fromTemplate);
 			else if (entry is null)
-				BindingContext = viewModel = new EntryEditViewModel(null);
+				BindingContext = viewModel = new EntryEditViewModel(null, false);
 			else
 				throw new NotSupportedException(
 					$"Currently only TextEntry is supported in the EntryEditPage, but was passed {entry?.GetType().Name}");

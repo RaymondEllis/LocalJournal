@@ -16,12 +16,12 @@
         <StackLayout Orientation="Vertical">
             <Frame BorderColor="Black">
                 <StackLayout Orientation="Vertical">
-                    <Entry Text="{Binding Description}"
+                    <Entry Text="{Binding Template.Description}"
                            Placeholder="Template Description"
                            Keyboard="Chat" />
                     <Picker x:Name="TypePicker"
                             Title="Type"
-                            SelectedItem="{Binding Type}"
+                            SelectedItem="{Binding Template.Type}"
                             SelectedIndexChanged="TypePicker_SelectedIndexChanged"/>
                 </StackLayout>
             </Frame>

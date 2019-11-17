@@ -1,8 +1,6 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using LocalJournal.Services;
+﻿using LocalJournal.Services;
 using LocalJournal.Views;
+using Xamarin.Forms;
 
 namespace LocalJournal
 {
@@ -13,11 +11,17 @@ namespace LocalJournal
 		{
 			InitializeComponent();
 
-			//DependencyService.Register<RawSerializer>();
+
 			DependencyService.Register<FileDataStore_EntryBase>();
+			DependencyService.Register<FileDataStore_Template>();
+
+			//DependencyService.Register<RawSerializer>();
 			DependencyService.Register<YamlFrontSerializer>();
+			DependencyService.Register<TemplateYamlSerializer>();
 			DependencyService.Register<AesBasicCrypto>();
+
 			DependencyService.Register<LockBiometricPin>();
+
 			MainPage = new MainPage();
 		}
 

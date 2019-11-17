@@ -13,8 +13,14 @@
 
     <ContentPage.Content>
         <ListView x:Name="TemplatesListView"
-                  ItemsSource="{Binding Templates}"
-                  ItemSelected="OnTemplateSelected">
+                  ItemsSource="{Binding Items}"
+                  ItemSelected="OnTemplateSelected"
+                  VerticalOptions="FillAndExpand"
+                  HasUnevenRows="true"
+                  RefreshCommand="{Binding LoadEntriesCommand}"
+                  IsPullToRefreshEnabled="true"
+                  IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                  CachingStrategy="RecycleElement">
 
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -25,11 +31,15 @@
                                    LineBreakMode="NoWrap" 
                                    Style="{DynamicResource ListEntryTextStyle}" 
                                    FontSize="16"  />
+                            <Button Text="Edit"
+                                    Clicked="EditTemplate_Clicked"
+                                    WidthRequest="50"
+                                    HorizontalOptions="EndAndExpand" />
                             <Button Text="X"
                                     Clicked="DeleteTemplate_Clicked"
                                     BackgroundColor="Accent"
                                     WidthRequest="50"
-                                    HorizontalOptions="EndAndExpand" />
+                                    HorizontalOptions="End" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

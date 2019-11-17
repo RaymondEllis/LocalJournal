@@ -13,6 +13,7 @@ namespace LocalJournal.Views
 	public partial class TemplateEditPage : ContentPage
 	{
 		TemplateEditViewModel ViewModel { get; }
+		private bool loaded = false;
 
 		public TemplateEditPage(Template? template)
 		{
@@ -23,29 +24,41 @@ namespace LocalJournal.Views
 				TypePicker.Items.Add(t);
 
 			BindingContext = ViewModel = new TemplateEditViewModel(template);
+
+			AssignEntry(ViewModel.Template.Entry);
+			TypePicker.SelectedItem = ViewModel.Template.Entry?.GetType().FullName;
+			loaded = true;
 		}
 
 		private void TypePicker_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			if (!loaded)
+				return;
+
 			// ToDo: Ask user if they want to change. It will reset the template.
 
-			View? newView;
 			if (ServiceLocatorByType<EntryBase>.TryGet((string)TypePicker.SelectedItem, out var entry))
-			{
-				if (entry is EntryMeta)
-					newView = null;
-				else
-				{
-					newView = new TextEntryView()
-					{
-						BindingContext = new EntryEditViewModel(entry as TextEntry)
-					};
-				}
-			}
+				AssignEntry(entry);
 			else
+				AssignEntry(null);
+		}
+
+		private void AssignEntry(EntryBase? entry)
+		{
+			View? newView;
+			if (entry is EntryMeta)
 				newView = null;
+			else
+			{
+				ViewModel.Template.Entry = entry;
+				newView = new TextEntryView()
+				{
+					BindingContext = new EntryEditViewModel(entry as TextEntry, false)
+				};
+			}
+
 			EntryFrame.Content = newView;
-			EntryFrame.IsVisible = newView != null;
+			EntryFrame.IsVisible = EntryFrame.Content != null;
 		}
 
 		private void Save_Clicked(object sender, EventArgs e)

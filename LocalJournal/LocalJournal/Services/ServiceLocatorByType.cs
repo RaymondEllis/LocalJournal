@@ -29,6 +29,14 @@ namespace LocalJournal.Services
 			return Cache.Keys.ToList();
 		}
 
+		public static bool TryGetType(string fullName, out Type result)
+		{
+			if (Cache is null)
+				Cache = BuildCache();
+
+			return Cache.TryGetValue(fullName, out result);
+		}
+
 		public static bool TryGet(string fullName, out T? result)
 		{
 			if (Cache is null)

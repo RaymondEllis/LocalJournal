@@ -20,6 +20,14 @@ namespace LocalJournal.Views
 			BindingContext = ViewModel = new TemplatesViewModel(DependencyService.Get<IDataStore<Template>>());
 		}
 
+		protected override async void OnAppearing()
+		{
+			base.OnAppearing();
+
+			if (ViewModel.Items.Count == 0)
+				await ViewModel.LoadCommand.ExecuteAsync();
+		}
+
 		private async void NewTemplate_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PushModalAsync(new NavigationPage(new TemplateEditPage(null)));
@@ -42,12 +50,21 @@ namespace LocalJournal.Views
 
 		private async void OnTemplateSelected(object sender, SelectedItemChangedEventArgs e)
 		{
-			await Navigation.PushModalAsync(new NavigationPage(new TemplateEditPage(e.SelectedItem as Template)));
+			if (e.SelectedItem is Template template)
+				await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(template.Entry, true)));
+
+			TemplatesListView.SelectedItem = null;
 		}
 
 		private async void Cancel_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PopModalAsync();
+		}
+
+		private async void EditTemplate_Clicked(object sender, EventArgs e)
+		{
+			if ((sender as BindableObject)?.BindingContext is Template template)
+				await Navigation.PushModalAsync(new NavigationPage(new TemplateEditPage(template)));
 		}
 	}
 }

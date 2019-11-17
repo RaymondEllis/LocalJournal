@@ -31,6 +31,7 @@ namespace LocalJournal.ViewModels
 		private async void ExecuteUpdateMessage(TemplateEditPage sender, Template item)
 		{
 			await DataStore.UpdateEntryAsync(item);
+			await LoadCommand.ExecuteAsync();
 		}
 
 		private async Task ExecuteLoadCommand()
@@ -61,8 +62,7 @@ namespace LocalJournal.ViewModels
 
 		private async Task ExecuteDeleteCommand(Template item)
 		{
-			throw new NotImplementedException();
-			//await DataStore.DeleteEntryAsync(item);
+			await DataStore.DeleteEntryAsync(item.Id);
 		}
 
 	}
