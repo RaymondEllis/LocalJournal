@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="LocalJournal.Views.TemplatesPage">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Cancel" Clicked="Cancel_Clicked" />
+        <ToolbarItem Text="New Template" Clicked="NewTemplate_Clicked" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <ListView x:Name="TemplatesListView"
+                  ItemsSource="{Binding Items}"
+                  ItemSelected="OnTemplateSelected"
+                  VerticalOptions="FillAndExpand"
+                  HasUnevenRows="true"
+                  RefreshCommand="{Binding LoadEntriesCommand}"
+                  IsPullToRefreshEnabled="true"
+                  IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                  CachingStrategy="RecycleElement">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal"
+                                     Padding="10">
+                            <Label Text="{Binding Description}"
+                                   LineBreakMode="NoWrap" 
+                                   Style="{DynamicResource ListEntryTextStyle}" 
+                                   FontSize="16"  />
+                            <Button Text="Edit"
+                                    Clicked="EditTemplate_Clicked"
+                                    WidthRequest="50"
+                                    HorizontalOptions="EndAndExpand" />
+                            <Button Text="X"
+                                    Clicked="DeleteTemplate_Clicked"
+                                    BackgroundColor="Accent"
+                                    WidthRequest="50"
+                                    HorizontalOptions="End" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,9 +1,10 @@
-﻿using NodaTime;
+﻿using LocalJournal.Services;
+using NodaTime;
 using System;
 
 namespace LocalJournal.Models
 {
-	public abstract class EntryBase : IEquatable<EntryBase>
+	public abstract class EntryBase : IEquatable<EntryBase>, IItem
 	{
 		/// <summary>
 		/// How is this entry known by the <see cref="IDataStore"/>?

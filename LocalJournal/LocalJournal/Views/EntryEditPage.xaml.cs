@@ -16,22 +16,30 @@ namespace LocalJournal.Views
 
 		TextEntry Entry => viewModel.Entry;
 
-		public EntryEditPage(EntryBase? entry)
+		public EntryEditPage(EntryBase? entry, bool fromTemplate = false)
 		{
 			InitializeComponent();
 
 			if (entry is TextEntry textEntry)
-				BindingContext = viewModel = new EntryEditViewModel(textEntry);
+				BindingContext = viewModel = new EntryEditViewModel(textEntry, fromTemplate);
 			else if (entry is null)
-				BindingContext = viewModel = new EntryEditViewModel(null);
+				BindingContext = viewModel = new EntryEditViewModel(null, false);
 			else
 				throw new NotSupportedException(
 					$"Currently only TextEntry is supported in the EntryEditPage, but was passed {entry?.GetType().Name}");
 
 
-			Encrypted.IsToggled = Entry.Encrypted;
+			EntryEditView.Encrypted.Toggled += Encrypted_Toggled;
+			EntryEditView.Encrypted.IsToggled = Entry.Encrypted;
 
 			MessagingCenter.Subscribe<App>(this, "OnResume", OnResume);
+		}
+
+		protected EntryEditPage(EntryEditViewModel viewModel)
+		{
+			InitializeComponent();
+
+			this.viewModel = viewModel;
 		}
 
 		protected async void OnResume(App sender)
@@ -88,7 +96,7 @@ namespace LocalJournal.Views
 					Entry.Encrypted = false;
 				}
 			}
-			Encrypted.IsToggled = Entry.Encrypted;
+			EntryEditView.Encrypted.IsToggled = Entry.Encrypted;
 		}
 	}
 }
