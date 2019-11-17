@@ -29,14 +29,14 @@ namespace LocalJournal.Services
 			}
 		}
 
-		public async Task<bool> AddEntryAsync(EntryBase entry)
+		public async Task<bool> AddAsync(EntryBase entry)
 		{
 			entries.Add(entry);
 
 			return await Task.FromResult(true);
 		}
 
-		public async Task<bool> UpdateEntryAsync(EntryBase entry)
+		public async Task<bool> UpdateAsync(EntryBase entry)
 		{
 			var oldEntry = entries.Where((EntryBase arg) => arg.Id == entry.Id).FirstOrDefault();
 			entries.Remove(oldEntry);
@@ -45,20 +45,20 @@ namespace LocalJournal.Services
 			return await Task.FromResult(true);
 		}
 
-		public async Task<bool> DeleteEntryAsync(string id)
+		public async Task<bool> DeleteAsync(EntryBase entry)
 		{
-			var oldEntry = entries.Where((EntryBase arg) => arg.Id == id).FirstOrDefault();
+			var oldEntry = entries.Where((EntryBase arg) => arg.Id == entry.Id).FirstOrDefault();
 			entries.Remove(oldEntry);
 
 			return await Task.FromResult(true);
 		}
 
-		public async Task<EntryBase?> GetEntryAsync(string id, bool ignoreBody = false)
+		public async Task<EntryBase?> GetAsync(string id, bool ignoreBody = false)
 		{
 			return await Task.FromResult(entries.FirstOrDefault(entry => entry.Id == id));
 		}
 
-		public async Task<IEnumerable<EntryBase>> GetEntriesAsync(bool forceRefresh = false)
+		public async Task<IEnumerable<EntryBase>> GetAllAsync(bool forceRefresh = false)
 		{
 			return await Task.FromResult(entries);
 		}

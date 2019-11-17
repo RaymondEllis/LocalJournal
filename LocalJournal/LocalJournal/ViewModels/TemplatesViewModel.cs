@@ -30,7 +30,7 @@ namespace LocalJournal.ViewModels
 
 		private async void ExecuteUpdateMessage(TemplateEditPage sender, Template item)
 		{
-			await DataStore.UpdateEntryAsync(item);
+			await DataStore.UpdateAsync(item);
 			await LoadCommand.ExecuteAsync();
 		}
 
@@ -44,7 +44,7 @@ namespace LocalJournal.ViewModels
 			try
 			{
 				Items.Clear();
-				var templates = await DataStore.GetEntriesAsync(true);
+				var templates = await DataStore.GetAllAsync(true);
 				foreach (var item in templates)
 				{
 					Items.Add(item);
@@ -62,7 +62,7 @@ namespace LocalJournal.ViewModels
 
 		private async Task ExecuteDeleteCommand(Template item)
 		{
-			await DataStore.DeleteEntryAsync(item.Id);
+			await DataStore.DeleteAsync(item);
 		}
 
 	}

@@ -37,7 +37,7 @@ namespace LocalJournal.Views
 
 			// ToDo: Ask user if they want to change. It will reset the template.
 
-			if (ServiceLocatorByType<EntryBase>.TryGet((string)TypePicker.SelectedItem, out var entry))
+			if (ServiceLocatorByType<EntryBase>.TryCreate((string)TypePicker.SelectedItem, out var entry))
 				AssignEntry(entry);
 			else
 				AssignEntry(null);

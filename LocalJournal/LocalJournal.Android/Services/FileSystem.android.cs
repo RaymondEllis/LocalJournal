@@ -52,7 +52,7 @@ namespace LocalJournal.Services
 			if (string.IsNullOrEmpty(query.SubFolder))
 				return Task.FromResult(Directory.GetFiles(DataPath, $"*{query.Extension}", SearchOption.TopDirectoryOnly));
 			else
-				return Task.FromResult(Directory.GetFiles(Path.Combine(query.SubFolder!, DataPath), $"*{query.Extension}", SearchOption.TopDirectoryOnly));
+				return Task.FromResult(Directory.GetFiles(Path.Combine(DataPath, query.SubFolder!), $"*{query.Extension}", SearchOption.TopDirectoryOnly));
 		}
 
 		public Task<Stream?> GetStreamAsync(FolderQuery query, string filename, FileAccess access)
