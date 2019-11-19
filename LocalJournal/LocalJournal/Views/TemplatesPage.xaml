@@ -4,46 +4,50 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="LocalJournal.Views.TemplatesPage">
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Cancel" Clicked="Cancel_Clicked" />
-        <ToolbarItem Text="New Template" Clicked="NewTemplate_Clicked" />
-    </ContentPage.ToolbarItems>
+             x:Class="LocalJournal.Views.TemplatesPage"
+             Title="New entry from template">
 
     <ContentPage.Content>
-        <ListView x:Name="TemplatesListView"
-                  ItemsSource="{Binding Items}"
-                  ItemSelected="OnTemplateSelected"
-                  VerticalOptions="FillAndExpand"
-                  HasUnevenRows="true"
-                  RefreshCommand="{Binding LoadEntriesCommand}"
-                  IsPullToRefreshEnabled="true"
-                  IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                  CachingStrategy="RecycleElement">
+        <StackLayout>
+            <ListView x:Name="TemplatesListView"
+                      ItemsSource="{Binding Items}"
+                      ItemSelected="OnTemplateSelected"
+                      VerticalOptions="FillAndExpand"
+                      HasUnevenRows="true"
+                      CachingStrategy="RecycleElement"
+                      IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                      RefreshCommand="{Binding LoadCommand}"
+                      IsPullToRefreshEnabled="True">
 
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal"
-                                     Padding="10">
-                            <Label Text="{Binding Description}"
-                                   LineBreakMode="NoWrap" 
-                                   Style="{DynamicResource ListEntryTextStyle}" 
-                                   FontSize="16"  />
-                            <Button Text="Edit"
-                                    Clicked="EditTemplate_Clicked"
-                                    WidthRequest="50"
-                                    HorizontalOptions="EndAndExpand" />
-                            <Button Text="X"
-                                    Clicked="DeleteTemplate_Clicked"
-                                    BackgroundColor="Accent"
-                                    WidthRequest="50"
-                                    HorizontalOptions="End" />
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal"
+                                         Padding="10">
+                                <Label Text="{Binding Description}"
+                                       LineBreakMode="NoWrap" 
+                                       Style="{DynamicResource ListEntryTextStyle}" 
+                                       FontSize="16"
+                                       HorizontalOptions="StartAndExpand"/>
+                                <Button Text="Edit"
+                                        Clicked="EditTemplate_Clicked"
+                                        WidthRequest="60"/>
+                                <Button Text="X"
+                                        Clicked="DeleteTemplate_Clicked"
+                                        BackgroundColor="Accent"
+                                        WidthRequest="50"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Refresh"
+                        Command="{Binding LoadCommand}"
+                        IsVisible="{OnPlatform Default=false, UWP=true}"/>
+                <Button Text="New Template"
+                        Clicked="NewTemplate_Clicked"/>
+            </StackLayout>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

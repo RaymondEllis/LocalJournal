@@ -56,11 +56,6 @@ namespace LocalJournal.Views
 			TemplatesListView.SelectedItem = null;
 		}
 
-		private async void Cancel_Clicked(object sender, EventArgs e)
-		{
-			await Navigation.PopModalAsync();
-		}
-
 		private async void EditTemplate_Clicked(object sender, EventArgs e)
 		{
 			if ((sender as BindableObject)?.BindingContext is Template template)

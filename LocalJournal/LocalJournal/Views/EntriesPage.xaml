@@ -8,22 +8,16 @@
              Title="{Binding Title}"
              x:Name="BrowseEntriesPage">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Setup Encryption" Clicked="SetupCryptro_Clicked" />
-        <ToolbarItem Text="Add" Clicked="AddEntry_Clicked" />
-        <ToolbarItem Text="From Template" Clicked="AddFromTemplate_Clicked" />
-    </ContentPage.ToolbarItems>
-
     <StackLayout>
         <ListView x:Name="EntriesListView"
                 ItemsSource="{Binding Entries}"
+                ItemSelected="OnEntrySelected"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
-                RefreshCommand="{Binding LoadEntriesCommand}"
-                IsPullToRefreshEnabled="true"
-                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                 CachingStrategy="RecycleElement"
-                ItemSelected="OnEntrySelected">
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                RefreshCommand="{Binding LoadEntriesCommand}"
+                IsPullToRefreshEnabled="true">
 
             <d:ListView.ItemsSource>
                 <x:Array Type="{x:Type x:String}">
@@ -54,6 +48,10 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Refresh"
+                    Command="{Binding LoadEntriesCommand}"
+                    IsVisible="{OnPlatform Default=false, UWP=true}"/>
+        </StackLayout>
     </StackLayout>
-
 </ContentPage>
