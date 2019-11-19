@@ -17,12 +17,21 @@ namespace LocalJournal.Services
 			Directory.CreateDirectory(DataPath);
 		}
 
+		private string FolderPath(FolderQuery query)
+		{
+			string folder;
+			if (string.IsNullOrEmpty(query.SubFolder))
+				folder = DataPath;
+			else
+				folder = Path.Combine(DataPath, query.SubFolder);
+
+			if (!Directory.Exists(folder))
+				Directory.CreateDirectory(folder);
+			return folder;
+		}
 		private string FullFileName(FolderQuery query, string filename)
 		{
-			if (string.IsNullOrEmpty(query.SubFolder))
-				return Path.Combine(DataPath, filename);
-			else
-				return Path.Combine(DataPath, Path.Combine(query.SubFolder, filename));
+			return Path.Combine(FolderPath(query), filename);
 		}
 
 		public async Task<bool> CheckPermission()
@@ -49,10 +58,8 @@ namespace LocalJournal.Services
 
 		public Task<string[]> GetFiles(FolderQuery query)
 		{
-			if (string.IsNullOrEmpty(query.SubFolder))
-				return Task.FromResult(Directory.GetFiles(DataPath, $"*{query.Extension}", SearchOption.TopDirectoryOnly));
-			else
-				return Task.FromResult(Directory.GetFiles(Path.Combine(DataPath, query.SubFolder!), $"*{query.Extension}", SearchOption.TopDirectoryOnly));
+			var path = FolderPath(query);
+			return Task.FromResult(Directory.GetFiles(path, $"*{query.Extension}", SearchOption.TopDirectoryOnly));
 		}
 
 		public Task<Stream?> GetStreamAsync(FolderQuery query, string filename, FileAccess access)
