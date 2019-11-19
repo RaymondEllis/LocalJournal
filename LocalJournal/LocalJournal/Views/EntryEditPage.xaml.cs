@@ -83,7 +83,7 @@ namespace LocalJournal.Views
 				if (!await cryptro.HasKey())
 				{
 					await DisplayAlert("Password not found!", "Please make sure encryption is setup.", "OK");
-					await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));
+					await Navigation.PushModalAsync(new NavigationPage(new SettingsPage()));
 				}
 				else
 					Entry.Encrypted = true;

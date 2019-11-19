@@ -10,7 +10,7 @@
             <views:EntriesPage />
         </ShellContent>
         <ShellContent Title="Settings"
-                      ContentTemplate="{DataTemplate views:CryptoSetupPage}">
+                      ContentTemplate="{DataTemplate views:SettingsPage}">
         </ShellContent>
         <ShellContent Title="About"
                       ContentTemplate="{DataTemplate views:AboutPage}">

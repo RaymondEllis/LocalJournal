@@ -66,7 +66,7 @@ namespace LocalJournal.Views
 
 		async void SetupCryptro_Clicked(object sender, EventArgs e)
 		{
-			await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));
+			await Navigation.PushModalAsync(new NavigationPage(new SettingsPage()));
 		}
 
 		async void AddFromTemplate_Clicked(object sender, EventArgs e)
