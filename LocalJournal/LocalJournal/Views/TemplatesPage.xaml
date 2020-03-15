@@ -22,19 +22,16 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal"
-                                         Padding="10">
+                            <StackLayout Style="{StaticResource ListStyle}">
                                 <Label Text="{Binding Description}"
-                                       LineBreakMode="NoWrap" 
-                                       Style="{DynamicResource ListEntryTextStyle}" 
-                                       FontSize="16"
+                                       Style="{DynamicResource ListTitleStyle}"
                                        HorizontalOptions="StartAndExpand"/>
                                 <Button Text="Edit"
                                         Clicked="EditTemplate_Clicked"
                                         WidthRequest="60"/>
                                 <Button Text="X"
                                         Clicked="DeleteTemplate_Clicked"
-                                        BackgroundColor="Accent"
+                                        Style="{StaticResource AlertButtonStyle}"
                                         WidthRequest="50"/>
                             </StackLayout>
                         </ViewCell>

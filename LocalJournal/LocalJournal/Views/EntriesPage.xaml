@@ -32,15 +32,14 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal" Padding="10">
+                        <StackLayout Style="{StaticResource ListStyle}">
                             <Label Text="{Binding Title}" 
                                 d:Text="{Binding .}"
-                                LineBreakMode="NoWrap" 
-                                Style="{DynamicResource ListEntryTextStyle}" 
-                                FontSize="16" />
+                                Style="{StaticResource ListTitleStyle}"/>
+                            <Label Text="{Binding LastModified, StringFormat='{0:yyyy-MM-dd hh:mm tt}'}" VerticalOptions="End" />
                             <Button Text="X"
                                 Clicked="DeleteEntry_Clicked"
-                                BackgroundColor="Accent"
+                                Style="{StaticResource AlertButtonStyle}"
                                 WidthRequest="50"
                                 HorizontalOptions="EndAndExpand" />
                         </StackLayout>

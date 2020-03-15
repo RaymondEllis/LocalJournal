@@ -15,7 +15,7 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Orientation="Vertical">
-                <Frame BorderColor="Black">
+                <Frame>
                     <StackLayout Orientation="Vertical">
                         <Entry Text="{Binding Template.Description}"
                                Placeholder="Template Description"
@@ -27,7 +27,6 @@
                     </StackLayout>
                 </Frame>
                 <Frame x:Name="EntryFrame"
-                       BorderColor="Black"
                        IsVisible="False">
                     <!-- This is where the entry view will be placed by the code behind. -->
                 </Frame>
