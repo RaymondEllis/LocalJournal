@@ -14,7 +14,6 @@ namespace LocalJournal.Services
 		public FileSystem_Platform()
 		{
 			DataPath = Path.Combine(Environment.ExternalStorageDirectory.AbsolutePath, "journal");
-			Directory.CreateDirectory(DataPath);
 		}
 
 		private string FolderPath(FolderQuery query)
