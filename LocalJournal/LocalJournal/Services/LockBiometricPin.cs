@@ -29,7 +29,7 @@ namespace LocalJournal.Services
 
 			if (IsLocked)
 			{
-				var result = await CrossFingerprint.Current.AuthenticateAsync("Unlock");
+				var result = await CrossFingerprint.Current.AuthenticateAsync(new AuthenticationRequestConfiguration("Unlock", ""));
 				IsLocked = !result.Authenticated;
 			}
 
