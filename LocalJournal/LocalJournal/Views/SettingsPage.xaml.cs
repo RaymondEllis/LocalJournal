@@ -37,7 +37,7 @@ namespace LocalJournal.Views
 			if (PasswordEntry.IsVisible)
 				password = PasswordEntry.Text;
 			else
-				password = await DisplayPromptAsync("Encryption Password", "Set password", initialValue: "");
+				password = await DisplayPromptAsync("Encryption Password", "Set password");
 			if (!string.IsNullOrWhiteSpace(password))
 			{
 				if (WeakPassword(password, out var message))

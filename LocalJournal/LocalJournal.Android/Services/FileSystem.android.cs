@@ -1,8 +1,7 @@
 ﻿using Android.OS;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using System.IO;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 #nullable enable
 
 namespace LocalJournal.Services
@@ -13,7 +12,7 @@ namespace LocalJournal.Services
 
 		public FileSystem_Platform()
 		{
-			DataPath = Path.Combine(Environment.ExternalStorageDirectory.AbsolutePath, "journal");
+			DataPath = Path.Combine(Environment.ExternalStorageDirectory?.AbsolutePath, "journal");
 		}
 
 		private string FolderPath(FolderQuery query)
@@ -37,10 +36,19 @@ namespace LocalJournal.Services
 		{
 			try
 			{
-				var status = await CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
+				var status = await Permissions.CheckStatusAsync<Permissions.StorageWrite>().ConfigureAwait(false);
 
 				if (status != PermissionStatus.Granted)
-					status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
+					status = await Permissions.RequestAsync<Permissions.StorageWrite>().ConfigureAwait(false);
+
+
+				if (status == PermissionStatus.Granted)
+				{
+					status = await Permissions.CheckStatusAsync<Permissions.StorageRead>().ConfigureAwait(false);
+
+					if (status != PermissionStatus.Granted)
+						status = await Permissions.RequestAsync<Permissions.StorageRead>().ConfigureAwait(false);
+				}
 
 				return status == PermissionStatus.Granted;
 			}
