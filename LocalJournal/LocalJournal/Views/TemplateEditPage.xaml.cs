@@ -53,7 +53,7 @@ namespace LocalJournal.Views
 				ViewModel.Template.Entry = entry;
 				newView = new TextEntryView()
 				{
-					BindingContext = new EntryEditViewModel(entry as TextEntry, false)
+					BindingContext = new EntryEditViewModel(entry as TextEntry)
 				};
 			}
 

@@ -51,7 +51,7 @@ namespace LocalJournal.Views
 		private async void OnTemplateSelected(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem is Template template)
-				await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(template.Entry, true)));
+				await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(template.Entry?.Clone())));
 
 			TemplatesListView.SelectedItem = null;
 		}
