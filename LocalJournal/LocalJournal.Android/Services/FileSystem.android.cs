@@ -25,6 +25,7 @@ namespace LocalJournal.Services
 
 			if (!Directory.Exists(folder))
 				Directory.CreateDirectory(folder);
+
 			return folder;
 		}
 		private string FullFileName(FolderQuery query, string filename)
