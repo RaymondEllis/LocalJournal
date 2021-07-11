@@ -16,18 +16,17 @@ namespace LocalJournal.Views
 
 		TextEntry Entry => viewModel.Entry;
 
-		public EntryEditPage(EntryBase? entry, bool fromTemplate = false)
+		public EntryEditPage(EntryBase? entry)
 		{
 			InitializeComponent();
 
 			if (entry is TextEntry textEntry)
-				BindingContext = viewModel = new EntryEditViewModel(textEntry, fromTemplate);
+				BindingContext = viewModel = new EntryEditViewModel(textEntry);
 			else if (entry is null)
-				BindingContext = viewModel = new EntryEditViewModel(null, false);
+				BindingContext = viewModel = new EntryEditViewModel(null);
 			else
 				throw new NotSupportedException(
 					$"Currently only TextEntry is supported in the EntryEditPage, but was passed {entry?.GetType().Name}");
-
 
 			EntryEditView.Encrypted.Toggled += Encrypted_Toggled;
 			EntryEditView.Encrypted.IsToggled = Entry.Encrypted;
@@ -83,7 +82,7 @@ namespace LocalJournal.Views
 				if (!await cryptro.HasKey())
 				{
 					await DisplayAlert("Password not found!", "Please make sure encryption is setup.", "OK");
-					await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));
+					await Navigation.PushModalAsync(new NavigationPage(new SettingsPage()));
 				}
 				else
 					Entry.Encrypted = true;

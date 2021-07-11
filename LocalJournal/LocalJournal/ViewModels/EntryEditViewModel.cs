@@ -7,18 +7,12 @@ namespace LocalJournal.ViewModels
 	{
 		public TextEntry Entry { get; }
 
-		public EntryEditViewModel(TextEntry? entry, bool fromTemplate)
+		public EntryEditViewModel(TextEntry? entry)
 		{
 			var now = MyDate.Now();
 			if (entry != null)
 			{
 				Entry = entry;
-				if(fromTemplate)
-				{
-					Entry.Id = null;
-					Entry.CreationTime = now;
-					Entry.LastModified = now;
-				}
 			}
 			else
 			{

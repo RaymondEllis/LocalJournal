@@ -1,8 +1,7 @@
 ﻿using Android.OS;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using System.IO;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 #nullable enable
 
 namespace LocalJournal.Services
@@ -13,26 +12,43 @@ namespace LocalJournal.Services
 
 		public FileSystem_Platform()
 		{
-			DataPath = Path.Combine(Environment.ExternalStorageDirectory.AbsolutePath, "journal");
-			Directory.CreateDirectory(DataPath);
+			DataPath = Path.Combine(Environment.ExternalStorageDirectory?.AbsolutePath, "journal");
 		}
 
+		private string FolderPath(FolderQuery query)
+		{
+			string folder;
+			if (string.IsNullOrEmpty(query.SubFolder))
+				folder = DataPath;
+			else
+				folder = Path.Combine(DataPath, query.SubFolder);
+
+			if (!Directory.Exists(folder))
+				Directory.CreateDirectory(folder);
+			return folder;
+		}
 		private string FullFileName(FolderQuery query, string filename)
 		{
-			if (string.IsNullOrEmpty(query.SubFolder))
-				return Path.Combine(DataPath, filename);
-			else
-				return Path.Combine(DataPath, Path.Combine(query.SubFolder, filename));
+			return Path.Combine(FolderPath(query), filename);
 		}
 
 		public async Task<bool> CheckPermission()
 		{
 			try
 			{
-				var status = await CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
+				var status = await Permissions.CheckStatusAsync<Permissions.StorageWrite>().ConfigureAwait(false);
 
 				if (status != PermissionStatus.Granted)
-					status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
+					status = await Permissions.RequestAsync<Permissions.StorageWrite>().ConfigureAwait(false);
+
+
+				if (status == PermissionStatus.Granted)
+				{
+					status = await Permissions.CheckStatusAsync<Permissions.StorageRead>().ConfigureAwait(false);
+
+					if (status != PermissionStatus.Granted)
+						status = await Permissions.RequestAsync<Permissions.StorageRead>().ConfigureAwait(false);
+				}
 
 				return status == PermissionStatus.Granted;
 			}
@@ -49,10 +65,8 @@ namespace LocalJournal.Services
 
 		public Task<string[]> GetFiles(FolderQuery query)
 		{
-			if (string.IsNullOrEmpty(query.SubFolder))
-				return Task.FromResult(Directory.GetFiles(DataPath, $"*{query.Extension}", SearchOption.TopDirectoryOnly));
-			else
-				return Task.FromResult(Directory.GetFiles(Path.Combine(DataPath, query.SubFolder!), $"*{query.Extension}", SearchOption.TopDirectoryOnly));
+			var path = FolderPath(query);
+			return Task.FromResult(Directory.GetFiles(path, $"*{query.Extension}", SearchOption.TopDirectoryOnly));
 		}
 
 		public Task<Stream?> GetStreamAsync(FolderQuery query, string filename, FileAccess access)

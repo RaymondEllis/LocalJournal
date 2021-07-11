@@ -43,11 +43,6 @@ namespace LocalJournal.Views
 			EntriesListView.SelectedItem = null;
 		}
 
-		async void AddEntry_Clicked(object sender, EventArgs e)
-		{
-			await Navigation.PushModalAsync(new NavigationPage(new EntryEditPage(null)));
-		}
-
 		async void DeleteEntry_Clicked(object sender, EventArgs e)
 		{
 			if ((sender as BindableObject)?.BindingContext is EntryMeta entry)
@@ -62,16 +57,6 @@ namespace LocalJournal.Views
 			}
 			else
 				await DisplayAlert("Nothing selected", "Unable to find entry to delete.", "OK");
-		}
-
-		async void SetupCryptro_Clicked(object sender, EventArgs e)
-		{
-			await Navigation.PushModalAsync(new NavigationPage(new CryptoSetupPage()));
-		}
-
-		async void AddFromTemplate_Clicked(object sender, EventArgs e)
-		{
-			await Navigation.PushModalAsync(new NavigationPage(new TemplatesPage()));
 		}
 	}
 }

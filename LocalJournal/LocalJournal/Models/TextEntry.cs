@@ -8,6 +8,14 @@ namespace LocalJournal.Models
 		/// <remarks>Can be null when <see cref="IDataStore"/> is only returning meta data.</remarks>
 		public string? Body { get; set; }
 
+		protected internal override EntryBase CloneInternal()
+		{
+			return new TextEntry
+			{
+				Body = Body
+			};
+		}
+
 		public bool Equals(TextEntry other)
 		{
 			return other != null &&

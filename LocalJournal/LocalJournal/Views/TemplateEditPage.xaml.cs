@@ -53,7 +53,7 @@ namespace LocalJournal.Views
 				ViewModel.Template.Entry = entry;
 				newView = new TextEntryView()
 				{
-					BindingContext = new EntryEditViewModel(entry as TextEntry, false)
+					BindingContext = new EntryEditViewModel(entry as TextEntry)
 				};
 			}
 
@@ -61,9 +61,10 @@ namespace LocalJournal.Views
 			EntryFrame.IsVisible = EntryFrame.Content != null;
 		}
 
-		private void Save_Clicked(object sender, EventArgs e)
+		private async void Save_Clicked(object sender, EventArgs e)
 		{
 			MessagingCenter.Send(this, "Update", ViewModel.Template);
+			await Navigation.PopModalAsync();
 		}
 
 		private async void Cancel_Clicked(object sender, EventArgs e)

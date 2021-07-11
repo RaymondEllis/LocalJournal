@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
   </PropertyGroup>
@@ -20,15 +20,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NodaTime" Version="2.4.7" />
-    <PackageReference Include="Plugin.Fingerprint" Version="2.1.1" />
-    <PackageReference Include="Refractored.MvvmHelpers" Version="1.5.1-beta" />
-    <PackageReference Include="Xamarin.Forms" Version="4.5.0.356" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.1" />  
-    <PackageReference Include="YamlDotNet" Version="8.1.0" />
+    <PackageReference Include="NodaTime" Version="3.0.3" />
+    <PackageReference Include="Plugin.Fingerprint" Version="2.1.2" />
+    <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1687" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />  
+    <PackageReference Include="YamlDotNet" Version="8.1.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\EntriesPage.xaml.cs">
       <DependentUpon>EntriesPage.xaml</DependentUpon>
     </Compile>
@@ -41,7 +44,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\CryptoSetupPage.xaml">
+    <EmbeddedResource Update="AppShell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SettingsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\EntryTypes\TextEntryView.xaml">

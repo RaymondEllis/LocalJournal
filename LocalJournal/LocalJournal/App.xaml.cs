@@ -22,7 +22,7 @@ namespace LocalJournal
 
 			DependencyService.Register<LockBiometricPin>();
 
-			MainPage = new MainPage();
+			MainPage = new AppShell();
 		}
 
 		protected override void OnStart()

@@ -45,9 +45,34 @@ namespace LocalJournal.Models
 				Title == other.Title &&
 				Encrypted == other.Encrypted;
 		}
+
+
+		/// <summary>
+		/// Creates a Clone with no Id, and CreationTime and LastModified set to Now.
+		/// </summary>
+		public virtual EntryBase Clone()
+		{
+			var now = MyDate.Now();
+
+			var clone = CloneInternal();
+
+			clone.Id = null;
+			clone.CreationTime = now;
+			clone.LastModified = now;
+			clone.Title = Title;
+			clone.Encrypted = Encrypted;
+
+			return clone;
+		}
+
+		protected internal abstract EntryBase CloneInternal();
 	}
 
 	public class EntryMeta : EntryBase
 	{
+		protected internal override EntryBase CloneInternal()
+		{
+			return new EntryMeta();
+		}
 	}
 }
