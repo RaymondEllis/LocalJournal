@@ -1,0 +1,69 @@
+﻿<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:windows="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:local="clr-namespace:LocalJournal"
+             x:Class="LocalJournal.App"
+             windows:Application.ImageDirectory="Assets">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <Color x:Key="PrimaryColor">#512bdf</Color>
+            <Color x:Key="SecondaryColor">White</Color>
+
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource PrimaryColor}" />
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource PrimaryColor}" />
+                <Setter Property="Padding" Value="14,10" />
+            </Style>
+
+            <!-- Global static colors -->
+            <Color x:Key="BackgroundColor">Black</Color>
+            <Color x:Key="BorderColor">DarkGray</Color>
+            <Color x:Key="TextColor">#DDD</Color>
+            <Color x:Key="SelectedTextColor">#66F</Color>
+            <Color x:Key="DisabledTextColor">Gray</Color>
+
+            <Color x:Key="AlertColor">#C44</Color>
+            <Color x:Key="AlertTextColor">Black</Color>
+
+
+            <!-- Global Styles -->
+            <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+                <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColor}" />
+            </Style>
+            <Style TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColor}" />
+                <Setter Property="BorderColor" Value="{StaticResource BorderColor}" />
+            </Style>
+
+            <Style x:Key="AlertButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource AlertColor}" />
+                <Setter Property="TextColor" Value="{StaticResource AlertTextColor}" />
+            </Style>
+
+            <Style x:Key="ListStyle" TargetType="StackLayout">
+                <Setter Property="Orientation" Value="Horizontal" />
+                <Setter Property="Padding" Value="10" />
+            </Style>
+            <Style x:Key="ListTitleStyle" TargetType="Label">
+                <Setter Property="LineBreakMode" Value="NoWrap" />
+                <Setter Property="FontSize" Value="Default" />
+            </Style>
+
+            <Style x:Key="BaseStyle" TargetType="Element">
+                <Setter Property="Shell.BackgroundColor" Value="{StaticResource BackgroundColor}" />
+                <Setter Property="Shell.ForegroundColor" Value="Pink" />
+                <Setter Property="Shell.TitleColor" Value="{StaticResource SelectedTextColor}" />
+                <Setter Property="Shell.DisabledColor" Value="{StaticResource DisabledTextColor}" />
+                <Setter Property="Shell.UnselectedColor" Value="{StaticResource TextColor}" />
+            </Style>
+            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
