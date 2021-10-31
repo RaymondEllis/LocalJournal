@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="LocalJournal.Views.TemplatesPage"
+             Title="New entry from template">
+
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView x:Name="TemplatesListView"
+                      ItemsSource="{Binding Items}"
+                      ItemSelected="OnTemplateSelected"
+                      VerticalOptions="FillAndExpand"
+                      HasUnevenRows="true"
+                      CachingStrategy="RecycleElement"
+                      IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                      RefreshCommand="{Binding LoadCommand}"
+                      IsPullToRefreshEnabled="True">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Style="{StaticResource ListStyle}">
+                                <Label Text="{Binding Description}"
+                                       Style="{DynamicResource ListTitleStyle}"
+                                       HorizontalOptions="StartAndExpand"/>
+                                <Button Text="Edit"
+                                        Clicked="EditTemplate_Clicked"
+                                        WidthRequest="60"/>
+                                <Button Text="X"
+                                        Clicked="DeleteTemplate_Clicked"
+                                        Style="{StaticResource AlertButtonStyle}"
+                                        WidthRequest="50"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Refresh"
+                        Command="{Binding LoadCommand}"
+                        IsVisible="{OnPlatform Default=false, UWP=true}"/>
+                <Button Text="New Template"
+                        Clicked="NewTemplate_Clicked"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
